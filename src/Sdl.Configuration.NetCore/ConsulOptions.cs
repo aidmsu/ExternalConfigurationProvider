@@ -1,4 +1,4 @@
-﻿namespace LUV.Configuration
+﻿namespace Sdl.Configuration
 {
     public class ConsulOptions
     {

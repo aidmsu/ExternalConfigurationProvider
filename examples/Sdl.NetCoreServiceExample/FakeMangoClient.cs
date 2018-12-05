@@ -1,4 +1,4 @@
-﻿namespace LUV.NetCoreServiceExample
+﻿namespace Sdl.NetCoreServiceExample
 {
     public class FakeMangoClient
     {

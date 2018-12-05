@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using LUV.Configuration;
+using Sdl.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using IConfigurationProvider = LUV.Configuration.IConfigurationProvider;
+using IConfigurationProvider = Sdl.Configuration.IConfigurationProvider;
 
-namespace LUV.NetCoreServiceExample
+namespace Sdl.NetCoreServiceExample
 {
     class Program
     {

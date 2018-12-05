@@ -4,7 +4,7 @@ using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace LUV.Configuration
+namespace Sdl.Configuration
 {
     public static class ConsulConfigurationServiceCollectionExtensions
     {

@@ -1,8 +1,8 @@
 using System;
-using LUV.Configuration;
+using Sdl.Configuration;
 using NUnit.Framework;
 
-namespace LUV.ConfigurationTests
+namespace Sdl.ConfigurationTests
 {
     [TestFixture]
     public class Tests

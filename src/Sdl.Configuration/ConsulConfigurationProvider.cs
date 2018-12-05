@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Consul;
 
-namespace LUV.Configuration
+namespace Sdl.Configuration
 {
     public class ConsulConfigurationProvider : IConfigurationProvider
     {
