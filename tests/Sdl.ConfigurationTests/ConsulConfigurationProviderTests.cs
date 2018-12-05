@@ -48,6 +48,18 @@ namespace Sdl.ConfigurationTests
             Assert.Equal("environment", exception.ParamName);
         }
 
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void GetServiceConfigAsync_ThrowsException_WhenServiceIsNotSpecified(string service)
+        {
+            var provider = new ConsulConfigurationProvider(_correctUrl, "token", "dev");
+
+            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => provider.GetServiceConfigAsync(service));
+
+            Assert.Equal("service", exception.Result.ParamName);
+        }
+
         [Fact]
         public void GetConsulServiceKey_ReturnsCorrectKey_WhenServiceAndHostingAreSpecified()
         {

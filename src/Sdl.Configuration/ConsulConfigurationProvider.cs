@@ -54,6 +54,8 @@ namespace Sdl.Configuration
         /// <returns></returns>
         public async Task<Dictionary<string, string>> GetServiceConfigAsync(string service, string hosting = null)
         {
+            if (string.IsNullOrEmpty(service)) throw new ArgumentNullException(nameof(service));
+
             var servicePrefix = GetConsulServiceKey(_environment, service, hosting);
 
             using (var client = GetConsulClient())
