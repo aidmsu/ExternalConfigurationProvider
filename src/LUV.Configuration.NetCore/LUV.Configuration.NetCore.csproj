@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>7.1</LangVersion>
+
+    <PackageId>LUV.Configuration.NetCore</PackageId>
+    <Owners>dorohov</Owners>
+    <Description>A .NET library to register LUV.Configuration services in default .NET Core DI contaiener.</Description>
+
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>0.1.0</Version>
+    <FileVersion>0.1.0.0</FileVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <OutputPath>C:\Users\dorohov\Documents\SmartDriving\Projects\ServiceConfigurationProvider\src\LUV.Configuration\bin\Debug\</OutputPath>
+    <RootNamespace>LUV.Configuration</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="consulsettings.json">
+      <Pack>true</Pack>
+      <PackagePath>\</PackagePath>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LUV.Configuration" Version="0.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.FileExtensions" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.2.0" />
+  </ItemGroup>
+
+</Project>
