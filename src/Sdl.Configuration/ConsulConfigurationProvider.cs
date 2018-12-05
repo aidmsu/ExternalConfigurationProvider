@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -31,7 +31,7 @@ namespace Sdl.Configuration
         /// <returns></returns>
         public async Task<T> GetServiceConfigAsync<T>(string service, string hosting = null)
         {
-            var servicePrefix = GetConsulKey(service, hosting);
+            var servicePrefix = GetConsulKey(_environment, service, hosting);
 
             using (var client = GetConsulClient())
             {
@@ -54,7 +54,7 @@ namespace Sdl.Configuration
         /// <returns></returns>
         public async Task<Dictionary<string, string>> GetServiceConfigAsync(string service, string hosting = null)
         {
-            var servicePrefix = GetConsulKey(service, hosting);
+            var servicePrefix = GetConsulKey(_environment, service, hosting);
 
             using (var client = GetConsulClient())
             {
@@ -68,20 +68,14 @@ namespace Sdl.Configuration
             }
         }
 
-        private ConsulClient GetConsulClient() => new ConsulClient(config =>
-        {
-            config.Address = _address;
-            config.Token = _token;
-        });
-
-        private string GetConsulKey(string service, string hosting)
+        internal static string GetConsulKey(string environment, string service, string hosting)
         {
             service = Normalize(service);
             hosting = Normalize(hosting);
 
             return string.IsNullOrEmpty(hosting)
-                ? $"{_environment}/{service}/"
-                : $"{_environment}/{hosting}/{service}/";
+                ? $"{environment}/{service}/"
+                : $"{environment}/{hosting}/{service}/";
         }
 
         private ConsulClient GetConsulClient() => new ConsulClient(config =>
@@ -90,6 +84,6 @@ namespace Sdl.Configuration
             config.Token = _token;
         });
 
-        private string Normalize(string value) => value?.ToLower();
+        private static string Normalize(string value) => value?.ToLower();
     }
 }
