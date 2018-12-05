@@ -5,15 +5,15 @@ VisualStudioVersion = 15.0.28307.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{9D606222-D4E4-4BCC-A9DB-284A8B492B34}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LUV.ConfigurationTests", "tests\LUV.ConfigurationTests\LUV.ConfigurationTests.csproj", "{14C62554-FB97-41C5-8BAA-77ABA23E707D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdl.ConfigurationTests", "tests\Sdl.ConfigurationTests\Sdl.ConfigurationTests.csproj", "{14C62554-FB97-41C5-8BAA-77ABA23E707D}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LUV.Configuration", "src\LUV.Configuration\LUV.Configuration.csproj", "{AD855A53-6408-452E-A2C3-26AAAFFF816D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdl.Configuration", "src\Sdl.Configuration\Sdl.Configuration.csproj", "{AD855A53-6408-452E-A2C3-26AAAFFF816D}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "examples", "examples", "{53F9A03A-1171-4450-A8A1-C6836B5082D8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LUV.NetCoreServiceExample", "examples\LUV.NetCoreServiceExample\LUV.NetCoreServiceExample.csproj", "{AD9D577E-1244-4613-8A60-1077056BE309}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdl.NetCoreServiceExample", "examples\Sdl.NetCoreServiceExample\Sdl.NetCoreServiceExample.csproj", "{AD9D577E-1244-4613-8A60-1077056BE309}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LUV.Configuration.NetCore", "src\LUV.Configuration.NetCore\LUV.Configuration.NetCore.csproj", "{ED52AC8B-8CD2-444D-811B-D20539675D7C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sdl.Configuration.NetCore", "src\Sdl.Configuration.NetCore\Sdl.Configuration.NetCore.csproj", "{ED52AC8B-8CD2-444D-811B-D20539675D7C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

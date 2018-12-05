@@ -4,9 +4,9 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>7.1</LangVersion>
 
-    <PackageId>LUV.Configuration.NetCore</PackageId>
+    <PackageId>Sdl.Configuration.NetCore</PackageId>
     <Owners>dorohov</Owners>
-    <Description>A .NET library to register LUV.Configuration services in default .NET Core DI contaiener.</Description>
+    <Description>A .NET library to register Sdl.Configuration services in default .NET Core DI contaiener.</Description>
 
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Version>0.1.0</Version>
@@ -14,8 +14,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <OutputPath>C:\Users\dorohov\Documents\SmartDriving\Projects\ServiceConfigurationProvider\src\LUV.Configuration\bin\Debug\</OutputPath>
-    <RootNamespace>LUV.Configuration</RootNamespace>
+    <OutputPath>C:\Users\dorohov\Documents\SmartDriving\Projects\ServiceConfigurationProvider\src\Sdl.Configuration\bin\Debug\</OutputPath>
+    <RootNamespace>Sdl.Configuration</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

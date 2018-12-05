@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\LUV.Configuration\LUV.Configuration.csproj" />
+    <ProjectReference Include="..\..\src\Sdl.Configuration\Sdl.Configuration.csproj" />
   </ItemGroup>
 
 </Project>
