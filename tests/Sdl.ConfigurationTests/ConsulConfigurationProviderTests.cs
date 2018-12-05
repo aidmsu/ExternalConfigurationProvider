@@ -63,7 +63,7 @@ namespace Sdl.ConfigurationTests
         {
             var provider = new ConsulConfigurationProvider(_correctUrl, "token", "dev");
 
-            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => provider.GetServiceConfigAsync(service));
+            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => provider.GetServiceConfigAsync(service, "hosting"));
 
             Assert.Equal("service", exception.Result.ParamName);
         }

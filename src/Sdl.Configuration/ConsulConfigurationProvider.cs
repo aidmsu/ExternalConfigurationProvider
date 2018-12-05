@@ -81,7 +81,9 @@ namespace Sdl.Configuration
 
                 var response = kvPairResult.Response;
 
-                return response?.ToDictionary(
+                if (response == null || !response.Any()) return null;
+
+                return response.ToDictionary(
                     kv => kv.Key.Replace($"{servicePrefix}", String.Empty), 
                     kv=> kv.Value == null ? string.Empty : Encoding.UTF8.GetString(kv.Value, 0, kv.Value.Length));
             }
