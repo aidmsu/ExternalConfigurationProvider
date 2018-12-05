@@ -1,4 +1,5 @@
-﻿namespace Sdl.Configuration
+﻿#if NETSTANDARD1_3
+namespace Sdl.Configuration
 {
     public class ConsulOptions
     {
@@ -18,3 +19,4 @@
         public string Environment { get; set; }
     }
 }
+#endif

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿#if NETSTANDARD1_3
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
 using Microsoft.Extensions.Configuration;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Sdl.Configuration
 {
+
     public static class ConsulConfigurationServiceCollectionExtensions
     {
         /// <summary>
@@ -55,3 +57,4 @@ namespace Sdl.Configuration
         }
     }
 }
+#endif
