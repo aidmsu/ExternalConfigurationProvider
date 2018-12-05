@@ -6,6 +6,8 @@ namespace Sdl.ConfigurationTests
 {
     public class Tests
     {
+        private readonly string _correctUrl = "http://localhost";
+
         [Fact]
         public void Ctor_ThrowsException_WhenUrlIsNull()
         {
@@ -33,7 +35,7 @@ namespace Sdl.ConfigurationTests
         [Fact]
         public void Ctor_ThrowsException_WhenEnvironmentIsNull()
         {
-            var exception = Assert.Throws<ArgumentNullException>(() => new ConsulConfigurationProvider("http://localhost", "token", null));
+            var exception = Assert.Throws<ArgumentNullException>(() => new ConsulConfigurationProvider(_correctUrl, "token", null));
 
             Assert.Equal("environment", exception.ParamName);
         }
@@ -41,9 +43,39 @@ namespace Sdl.ConfigurationTests
         [Fact]
         public void Ctor_ThrowsException_WhenEnvironmentIsEmpty()
         {
-            var exception = Assert.Throws<ArgumentNullException>(() => new ConsulConfigurationProvider("http://localhost", "token", null));
+            var exception = Assert.Throws<ArgumentNullException>(() => new ConsulConfigurationProvider(_correctUrl, "token", null));
 
             Assert.Equal("environment", exception.ParamName);
+        }
+
+        [Fact]
+        public void GetConsulKey_ReturnsCorrectKey_WhenServiceAndHostingAreSpecified()
+        {
+            var key = ConsulConfigurationProvider.GetConsulKey("dev", "mango", "azure");
+
+            Assert.Equal("dev/azure/mango/", key);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void GetConsulKey_ReturnsCorrectKey_WhenHostinIsNotSpecified(string hosting)
+        {
+            var key = ConsulConfigurationProvider.GetConsulKey("dev", "mango", hosting);
+
+            Assert.Equal("dev/mango/", key);
+        }
+
+        [Theory]
+        [InlineData("production", "telephony", "azurE")]
+        [InlineData("Production", "telephonY", "Azure")]
+        [InlineData("productioN", "TelephonY", "AZURE")]
+        [InlineData("PRODUCTION", "TELEPHONY", "AzurE")]
+        public void GetConsulKey_ReturnsNormalizedKey(string env, string service, string hosting)
+        {
+            var key = ConsulConfigurationProvider.GetConsulKey(env, service, hosting);
+
+            Assert.Equal("production/azure/telephony/", key);
         }
     }
 }

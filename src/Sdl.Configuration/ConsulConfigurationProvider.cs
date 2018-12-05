@@ -70,6 +70,7 @@ namespace Sdl.Configuration
 
         internal static string GetConsulKey(string environment, string service, string hosting)
         {
+            environment = Normalize(environment);
             service = Normalize(service);
             hosting = Normalize(hosting);
 
