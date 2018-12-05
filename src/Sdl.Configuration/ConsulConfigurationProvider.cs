@@ -9,11 +9,26 @@ namespace Sdl.Configuration
 {
     public class ConsulConfigurationProvider : IConfigurationProvider
     {
+        private static readonly Func<Uri, string, IConsulClient> DefaultConsulClientFactory = (address, token) =>
+        {
+            return new ConsulClient(config =>
+            {
+                config.Address = address;
+                config.Token = token;
+            });
+        };
+
         private readonly Uri _address;
         private readonly string _token;
         private readonly string _environment;
+        private readonly Func<Uri, string, IConsulClient> _consulClientFactory;
 
-        public ConsulConfigurationProvider(string url, string token, string environment)
+        public ConsulConfigurationProvider(string url, string token, string environment) 
+            : this(url, token, environment, DefaultConsulClientFactory)
+        {
+        }
+
+        internal ConsulConfigurationProvider(string url, string token, string environment, Func<Uri, string, IConsulClient> consulClientFactory)
         {
             if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
             if (!Uri.TryCreate(url, UriKind.Absolute, out _address)) throw new ArgumentException("Bad url format.", nameof(url));
@@ -21,6 +36,8 @@ namespace Sdl.Configuration
 
             _token = token;
             _environment = Normalize(environment);
+
+            _consulClientFactory = consulClientFactory;
         }
 
         /// <summary>
@@ -33,7 +50,7 @@ namespace Sdl.Configuration
         {
             var servicePrefix = GetConsulServiceKey(_environment, service, hosting);
 
-            using (var client = GetConsulClient())
+            using (var client = _consulClientFactory(_address, _token))
             {
                 var kvPairResult = await client.KV.List(servicePrefix);
 
@@ -58,14 +75,14 @@ namespace Sdl.Configuration
 
             var servicePrefix = GetConsulServiceKey(_environment, service, hosting);
 
-            using (var client = GetConsulClient())
+            using (var client = _consulClientFactory(_address, _token))
             {
                 var kvPairResult = await client.KV.List(servicePrefix);
 
                 var response = kvPairResult.Response;
 
                 return response?.ToDictionary(
-                    kv => kv.Key.Replace($"{servicePrefix}/", String.Empty), 
+                    kv => kv.Key.Replace($"{servicePrefix}", String.Empty), 
                     kv=> kv.Value == null ? string.Empty : Encoding.UTF8.GetString(kv.Value, 0, kv.Value.Length));
             }
         }
@@ -80,12 +97,6 @@ namespace Sdl.Configuration
                 ? $"{environment}/{service}/"
                 : $"{environment}/{hosting}/{service}/";
         }
-
-        private ConsulClient GetConsulClient() => new ConsulClient(config =>
-        {
-            config.Address = _address;
-            config.Token = _token;
-        });
 
         private static string Normalize(string value) => value?.ToLower();
     }
