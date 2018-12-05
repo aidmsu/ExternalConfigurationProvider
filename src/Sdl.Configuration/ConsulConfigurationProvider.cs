@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -83,6 +83,12 @@ namespace Sdl.Configuration
                 ? $"{_environment}/{service}/"
                 : $"{_environment}/{hosting}/{service}/";
         }
+
+        private ConsulClient GetConsulClient() => new ConsulClient(config =>
+        {
+            config.Address = _address;
+            config.Token = _token;
+        });
 
         private string Normalize(string value) => value?.ToLower();
     }
