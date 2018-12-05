@@ -49,9 +49,9 @@ namespace Sdl.ConfigurationTests
         }
 
         [Fact]
-        public void GetConsulKey_ReturnsCorrectKey_WhenServiceAndHostingAreSpecified()
+        public void GetConsulServiceKey_ReturnsCorrectKey_WhenServiceAndHostingAreSpecified()
         {
-            var key = ConsulConfigurationProvider.GetConsulKey("dev", "mango", "azure");
+            var key = ConsulConfigurationProvider.GetConsulServiceKey("dev", "mango", "azure");
 
             Assert.Equal("dev/azure/mango/", key);
         }
@@ -59,9 +59,9 @@ namespace Sdl.ConfigurationTests
         [Theory]
         [InlineData("")]
         [InlineData(null)]
-        public void GetConsulKey_ReturnsCorrectKey_WhenHostinIsNotSpecified(string hosting)
+        public void GetConsulServiceKey_ReturnsCorrectKey_WhenHostinIsNotSpecified(string hosting)
         {
-            var key = ConsulConfigurationProvider.GetConsulKey("dev", "mango", hosting);
+            var key = ConsulConfigurationProvider.GetConsulServiceKey("dev", "mango", hosting);
 
             Assert.Equal("dev/mango/", key);
         }
@@ -71,9 +71,9 @@ namespace Sdl.ConfigurationTests
         [InlineData("Production", "telephonY", "Azure")]
         [InlineData("productioN", "TelephonY", "AZURE")]
         [InlineData("PRODUCTION", "TELEPHONY", "AzurE")]
-        public void GetConsulKey_ReturnsNormalizedKey(string env, string service, string hosting)
+        public void GetConsulServiceKey_ReturnsNormalizedKey(string env, string service, string hosting)
         {
-            var key = ConsulConfigurationProvider.GetConsulKey(env, service, hosting);
+            var key = ConsulConfigurationProvider.GetConsulServiceKey(env, service, hosting);
 
             Assert.Equal("production/azure/telephony/", key);
         }

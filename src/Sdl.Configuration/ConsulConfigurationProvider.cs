@@ -31,7 +31,7 @@ namespace Sdl.Configuration
         /// <returns></returns>
         public async Task<T> GetServiceConfigAsync<T>(string service, string hosting = null)
         {
-            var servicePrefix = GetConsulKey(_environment, service, hosting);
+            var servicePrefix = GetConsulServiceKey(_environment, service, hosting);
 
             using (var client = GetConsulClient())
             {
@@ -54,7 +54,7 @@ namespace Sdl.Configuration
         /// <returns></returns>
         public async Task<Dictionary<string, string>> GetServiceConfigAsync(string service, string hosting = null)
         {
-            var servicePrefix = GetConsulKey(_environment, service, hosting);
+            var servicePrefix = GetConsulServiceKey(_environment, service, hosting);
 
             using (var client = GetConsulClient())
             {
@@ -68,7 +68,7 @@ namespace Sdl.Configuration
             }
         }
 
-        internal static string GetConsulKey(string environment, string service, string hosting)
+        internal static string GetConsulServiceKey(string environment, string service, string hosting)
         {
             environment = Normalize(environment);
             service = Normalize(service);
