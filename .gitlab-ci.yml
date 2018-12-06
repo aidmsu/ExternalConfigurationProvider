@@ -5,10 +5,9 @@ stages:
 build:
   stage: build
   script: 
-    - dotnet build
+    - dotnet build src/Sdl.Configuration
   tags:
     - .net
-
 
 test:
   stage: test
