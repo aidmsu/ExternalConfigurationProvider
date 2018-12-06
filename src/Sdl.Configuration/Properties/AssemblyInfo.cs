@@ -1,3 +1,3 @@
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("Sdl.ConfigurationTests")]
+[assembly: InternalsVisibleTo("Sdl.Configuration.Tests")]
