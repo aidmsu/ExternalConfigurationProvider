@@ -11,7 +11,7 @@ using Moq;
 
 namespace Sdl.ConfigurationTests
 {
-    public class Tests
+    public class ConsulConfigurationProviderTests
     {
         private readonly string _correctUrl = "http://localhost";
         private readonly Mock<IConsulClient> _mockConsulClient = new Mock<IConsulClient>();
