@@ -32,21 +32,17 @@ namespace Sdl.NetCoreServiceExample
                     options.Token = consulToken;
                     options.Environment = "Debug";
                 })
-                .AddTransient<FakeMangoClient>()
                 .BuildServiceProvider();
 
             _configurationProvider = serviceProvider.GetService<IConfigurationProvider>();
 
             var mangoKey = configuration.GetSection("Consul:MangoKey").Value;
-            var telephonyQueueKey = configuration.GetSection("Consul:TelephonyQueue").Value;
 
             var mangoConfig = await _configurationProvider.GetServiceConfigAsync(mangoKey);
-            var telephonyQueueConfig = await _configurationProvider.GetServiceConfigAsync(telephonyQueueKey);
 
             LogConfig(mangoConfig, "mango");
-            Console.WriteLine();
-            LogConfig(telephonyQueueConfig, "telephony");
 
+            Console.WriteLine();
             Console.ReadLine();
         }
 
