@@ -1,4 +1,4 @@
-﻿#if NETSTANDARD1_3
+﻿#if NETSTANDARD15
 namespace Sdl.Configuration
 {
     public class ConsulOptions
