@@ -1,0 +1,12 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Sdl.Net45ServiceExample.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ConsulUrl" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">http://127.0.0.1:8500</Value>
+    </Setting>
+    <Setting Name="ConsulToken" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">a946c9cc-4e8e-2870-6dbe-a7f0a722edfd</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
