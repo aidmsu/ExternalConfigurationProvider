@@ -125,9 +125,10 @@ namespace Sdl.ConfigurationTests
         [Fact]
         public async Task GetServiceConfigAsync_ConvertConsulResponseToSettingsDictionary()
         {
-            ConsulClientShouldReturn(new Dictionary<string, string>{ { "debug/mango/key1", "value1" } });
+            ConsulClientShouldReturn(new Dictionary<string, string> { { "debug/mango/key1", "value1" } });
 
-            var provider = new ConsulConfigurationProvider(_correctUrl, "token", "debug", (address, token) => _mockConsulClient.Object);
+            var provider = new ConsulConfigurationProvider(_correctUrl, "token", "debug",
+                (address, token) => _mockConsulClient.Object);
 
             var config = await provider.GetServiceConfigAsync("mango");
 
@@ -136,12 +137,79 @@ namespace Sdl.ConfigurationTests
             Assert.Contains("value1", config["key1"]);
         }
 
+        [Fact]
+        public async Task GetServiceConfigAsyncT_ConvertConsulResponseToSettingsObject()
+        {
+            ConsulClientShouldReturn(new Dictionary<string, string>
+            {
+                { "debug/mango/ApiKey", "secretKey" },
+                { "debug/mango/ApiSignature", "secretSignature" }
+            });
+
+            var provider = new ConsulConfigurationProvider(_correctUrl, "token", "debug", (address, token) => _mockConsulClient.Object);
+
+            var config = await provider.GetServiceConfigAsync<MangoConfig>("mango");
+
+            Assert.NotNull(config);
+            Assert.Equal("secretKey", config.ApiKey);
+            Assert.Equal("secretSignature", config.ApiSignature);
+        }
+
+        [Fact]
+        public async Task GetServiceConfigAsyncT_IsNotCaseSensitive()
+        {
+            ConsulClientShouldReturn(new Dictionary<string, string>
+            {
+                { "debug/mango/apiKey", "secretKey" },
+                { "debug/mango/ApiSigNaturE", "secretSignature" }
+            });
+
+            var provider = new ConsulConfigurationProvider(_correctUrl, "token", "debug", (address, token) => _mockConsulClient.Object);
+
+            var config = await provider.GetServiceConfigAsync<MangoConfig>("mango");
+
+            Assert.NotNull(config);
+            Assert.Equal("secretKey", config.ApiKey);
+            Assert.Equal("secretSignature", config.ApiSignature);
+        }
+
+        [Fact]
+        public async Task GetServiceConfigAsyncT_ReturnsCorrectObject_WhenTHasPropertiesDifferingOnlyCase()
+        {
+            ConsulClientShouldReturn(new Dictionary<string, string>
+            {
+                { "debug/mango/ApiKey", "secretKey" },
+                { "debug/mango/ApiSignature", "secretSignature" }
+            });
+
+            var provider = new ConsulConfigurationProvider(_correctUrl, "token", "debug", (address, token) => _mockConsulClient.Object);
+
+            var config = await provider.GetServiceConfigAsync<MangoConfigWithPropertiesDifferingOnlyCase>("mango");
+
+            Assert.NotNull(config);
+            Assert.Equal("secretKey", config.ApiKey);
+            Assert.Equal("secretSignature", config.ApiSignature);
+        }
+
         private void ConsulClientShouldReturn(IEnumerable<KeyValuePair<string, string>> keyValues)
         {
             var kvPairs = keyValues?.Select(kv => new KVPair(kv.Key) {Value = Encoding.UTF8.GetBytes(kv.Value)}).ToArray();
 
             _mockConsulClient.Setup(client => client.KV.List(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(new QueryResult<KVPair[]> { Response = kvPairs }));
+        }
+
+        private class MangoConfig
+        {
+            public string ApiKey { get; set; }
+            public string ApiSignature { get; set; }
+        }
+
+        private class MangoConfigWithPropertiesDifferingOnlyCase
+        {
+            public string ApiKey { get; set; }
+            public string apiKey { get; set; }
+            public string ApiSignature { get; set; }
         }
     }
 }

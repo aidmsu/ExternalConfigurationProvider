@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Consul;
@@ -46,21 +47,19 @@ namespace Sdl.Configuration
         /// <param name="service"></param>
         /// <param name="hosting"></param>
         /// <returns></returns>
-        public async Task<T> GetServiceConfigAsync<T>(string service, string hosting = null)
+        public async Task<T> GetServiceConfigAsync<T>(string service, string hosting = null) where T : new()
         {
-            var servicePrefix = GetConsulServiceKey(_environment, service, hosting);
+            var dictionary = await GetServiceConfigAsync(service, hosting);
 
-            using (var client = _consulClientFactory(_address, _token))
+            var someObject = new T();
+            var someObjectType = someObject.GetType().GetTypeInfo();
+
+            foreach (var item in dictionary)
             {
-                var kvPairResult = await client.KV.List(servicePrefix);
-
-                var response = kvPairResult.Response;
-
-                throw new NotImplementedException();
-                //return response?.ToDictionary(
-                //    kv => kv.Key.Replace($"{servicePrefix}/", String.Empty),
-                //    kv => kv.Value == null ? string.Empty : Encoding.UTF8.GetString(kv.Value, 0, kv.Value.Length));
+                someObjectType.GetDeclaredProperty(item.Key)?.SetValue(someObject, item.Value, null);
             }
+
+            return someObject;
         }
 
         /// <summary>
