@@ -51,15 +51,16 @@ namespace Sdl.Configuration
         {
             var dictionary = await GetServiceConfigAsync(service, hosting);
 
-            var someObject = new T();
-            var someObjectType = someObject.GetType().GetTypeInfo();
+            var config = new T();
+            var configType = config.GetType().GetTypeInfo();
 
             foreach (var item in dictionary)
             {
-                someObjectType.GetDeclaredProperty(item.Key)?.SetValue(someObject, item.Value, null);
+                var propertyBindingFlags = BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public;
+                configType.GetProperty(item.Key, propertyBindingFlags)?.SetValue(config, item.Value, null);
             }
 
-            return someObject;
+            return config;
         }
 
         /// <summary>
