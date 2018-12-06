@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -54,7 +54,7 @@ namespace Sdl.Configuration
             if (consulClientFactory == null) throw new ArgumentNullException(nameof(consulClientFactory));
 
             _token = token;
-            _environment = Normalize(environment);
+            _environment = environment;
 
             _consulClientFactory = consulClientFactory;
         }
