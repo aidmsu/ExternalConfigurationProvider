@@ -1,4 +1,4 @@
-﻿#if NETSTANDARD15
+#if NETSTANDARD1_5
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
