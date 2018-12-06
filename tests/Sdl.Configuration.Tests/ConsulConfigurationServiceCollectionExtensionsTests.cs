@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if NETCOREAPP2_0
+using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
@@ -42,3 +43,4 @@ namespace Sdl.ConfigurationTests
         }
     }
 }
+#endif

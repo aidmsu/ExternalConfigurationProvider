@@ -1,4 +1,5 @@
 #tool "nuget:?package=xunit.runner.console"
+#tool "nuget:?package=OpenCover"
 
 var configuration = Argument("configuration", "Release");
 var version = Argument<string>("buildVersion", null);
@@ -37,7 +38,17 @@ Task("Test").IsDependentOn("Build").Does(() =>
     });
 });
 
-Task("Pack").IsDependentOn("Test").Does(()=> 
+Task("TestCoverage").IsDependentOn("Test").Does(() => 
+{
+    OpenCover(
+        tool => { tool.XUnit2("tests/Sdl.Configuration.Tests/bin/" + configuration + "/**/Sdl.Configuration.Tests.dll", new XUnit2Settings { ShadowCopy = false }); },
+        new FilePath("coverage.xml"),
+        new OpenCoverSettings()
+            .WithFilter("+[Sdl.Configuration]*")
+            .WithFilter("-[Sdl.Configuration.Tests]*"));
+});
+
+Task("Pack").IsDependentOn("TestCoverage").Does(()=> 
 {
     CreateDirectory("build");
     
