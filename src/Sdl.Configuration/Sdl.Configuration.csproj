@@ -15,18 +15,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="consulsettings.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="consulsettings.json">
-      <Pack>true</Pack>
-      <PackagePath>\</PackagePath>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Consul" Version="0.7.2.6" />
   </ItemGroup>
 
