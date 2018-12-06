@@ -24,6 +24,20 @@ namespace Sdl.Configuration
         private readonly string _environment;
         private readonly Func<Uri, string, IConsulClient> _consulClientFactory;
 
+        /// <summary>
+        /// Initializes a new instance of the ConsulConfigurationProvider class that gets services settings stored in Consul.
+        /// </summary>
+        /// <param name="url">The absolute url where Consul is hosted.</param>
+        /// <param name="token">The Consul authentication token.</param>
+        /// <param name="environment">Then environment where app runs. Examples: dev, staging, production.</param>
+        /// <exception cref="System.ArgumentNullException">Thrown when the url is not specified.</exception>
+        /// <exception cref="System.ArgumentException">Thrown when the url is not absolute.</exception>
+        /// <exception cref="System.ArgumentNullException">Thrown when the environment is not specified.</exception>
+        /// <example>
+        /// <code>
+        /// var provider = new ConsulConfigurationProvider("http://localhost:8500", "b1gs33cr3t", "staging");
+        /// </code>
+        /// </example>
         public ConsulConfigurationProvider(string url, string token, string environment) 
             : this(url, token, environment, DefaultConsulClientFactory)
         {
@@ -43,11 +57,18 @@ namespace Sdl.Configuration
         }
 
         /// <summary>
-        /// 
+        /// Gets service settings from Consul and converts them to the specified .NET type.
         /// </summary>
-        /// <param name="service"></param>
-        /// <param name="hosting"></param>
-        /// <returns></returns>
+        /// <param name="service">The service name.</param>
+        /// <param name="hosting">The hosting where the service is hosted. Optional.</param>
+        /// <exception cref="System.ArgumentNullException">Thrown when the service is not specified.</exception>
+        /// <example>
+        /// <code>
+        /// var settings = GetServiceConfigAsync&lt;ServiceSettings&gt;("Mango");
+        /// // or
+        /// var settings = GetServiceConfigAsync&lt;ServiceSettings&gt;("Telephony", "azure");
+        /// </code>
+        /// </example>
         public async Task<T> GetServiceConfigAsync<T>(string service, string hosting = null) where T : new()
         {
             var dictionary = await GetServiceConfigAsync(service, hosting);
@@ -71,11 +92,18 @@ namespace Sdl.Configuration
         }
 
         /// <summary>
-        /// 
+        /// Gets service settings from Consul.
         /// </summary>
-        /// <param name="service"></param>
-        /// <param name="hosting"></param>
-        /// <returns></returns>
+        /// <param name="service">The service name.</param>
+        /// <param name="hosting">The hosting where the service is hosted. Optional.</param>
+        /// <exception cref="System.ArgumentNullException">Thrown when the service is not specified.</exception>
+        /// <example>
+        /// <code>
+        /// var settings = GetServiceConfigAsync&lt;ServiceSettings&gt;("Mango");
+        /// // or
+        /// var settings = GetServiceConfigAsync&lt;ServiceSettings&gt;("Telephony", "azure");
+        /// </code>
+        /// </example>
         public async Task<Dictionary<string, string>> GetServiceConfigAsync(string service, string hosting = null)
         {
             if (string.IsNullOrEmpty(service)) throw new ArgumentNullException(nameof(service));
