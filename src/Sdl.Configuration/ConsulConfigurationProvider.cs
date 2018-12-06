@@ -129,13 +129,11 @@ namespace Sdl.Configuration
 
         internal static string GetConsulServiceKey(string environment, string service, string hosting)
         {
-            environment = Normalize(environment);
-            service = Normalize(service);
-            hosting = Normalize(hosting);
-
-            return string.IsNullOrEmpty(hosting)
+            var serviceKey = string.IsNullOrEmpty(hosting)
                 ? $"{environment}/{service}/"
                 : $"{environment}/{hosting}/{service}/";
+
+            return Normalize(serviceKey);
         }
 
         private static string Normalize(string value) => value?.ToLower();
