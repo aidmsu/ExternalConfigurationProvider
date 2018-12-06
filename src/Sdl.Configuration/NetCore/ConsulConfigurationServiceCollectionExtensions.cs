@@ -1,4 +1,4 @@
-#if NETSTANDARD1_5
+﻿#if NETSTANDARD1_5
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.IO;
@@ -7,14 +7,12 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Sdl.Configuration
 {
-
+    /// <exclude />
     public static class ConsulConfigurationServiceCollectionExtensions
     {
         /// <summary>
-        /// 
+        /// Configure Consul configuration provider services.
         /// </summary>
-        /// <param name="services"></param>
-        /// <returns></returns>
         public static IServiceCollection AddConsul(this IServiceCollection services)
         {
             var builder = new ConfigurationBuilder()
@@ -38,11 +36,8 @@ namespace Sdl.Configuration
         }
 
         /// <summary>
-        /// 
+        /// Configure Consul configuration provider services.
         /// </summary>
-        /// <param name="services"></param>
-        /// <param name="configuration"></param>
-        /// <returns></returns>
         public static IServiceCollection AddConsul(this IServiceCollection services, Action<ConsulOptions> configuration)
         {
             services.TryAddSingleton<IConfigurationProvider>(serviceProvider =>

@@ -8,6 +8,9 @@ using Consul;
 
 namespace Sdl.Configuration
 {
+    /// <summary>
+    /// Provides methods to get service settings from Consul.
+    /// </summary>
     public class ConsulConfigurationProvider : IConfigurationProvider
     {
         private static readonly Func<Uri, string, IConsulClient> DefaultConsulClientFactory = (address, token) =>
@@ -29,7 +32,7 @@ namespace Sdl.Configuration
         /// </summary>
         /// <param name="url">The absolute url where Consul is hosted.</param>
         /// <param name="token">The Consul authentication token.</param>
-        /// <param name="environment">Then environment where app runs. Examples: dev, staging, production.</param>
+        /// <param name="environment">The environment where app runs.</param>
         /// <exception cref="System.ArgumentNullException">Thrown when the url is not specified.</exception>
         /// <exception cref="System.ArgumentException">Thrown when the url is not absolute.</exception>
         /// <exception cref="System.ArgumentNullException">Thrown when the environment is not specified.</exception>

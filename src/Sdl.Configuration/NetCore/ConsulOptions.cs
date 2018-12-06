@@ -1,20 +1,21 @@
-#if NETSTANDARD1_5
+﻿#if NETSTANDARD1_5
 namespace Sdl.Configuration
 {
+    /// <exclude />
     public class ConsulOptions
     {
         /// <summary>
-        /// Consul url.
+        /// The absolute url where Consul is hosted
         /// </summary>
         public string Url { get; set; }
 
         /// <summary>
-        /// Consul authentication token.
+        /// The Consul authentication token.
         /// </summary>
         public string Token { get; set; }
 
         /// <summary>
-        /// The environment where the app runs. Example: debug, staging, production.
+        /// The environment where app runs.
         /// </summary>
         public string Environment { get; set; }
     }
