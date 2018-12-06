@@ -12,7 +12,7 @@ build:
 test:
   stage: test
   script: 
-    - dotnet test
+    - dotnet test tests/Sdl.Configuration.Tests
   tags:
     - .net
 
