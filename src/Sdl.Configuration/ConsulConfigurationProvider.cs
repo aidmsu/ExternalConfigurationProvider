@@ -54,10 +54,16 @@ namespace Sdl.Configuration
             var config = new T();
             var configType = config.GetType().GetTypeInfo();
 
+            var propertyBindingFlags = BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public;
+            var properties = configType.GetProperties(propertyBindingFlags);
+
             foreach (var item in dictionary)
             {
-                var propertyBindingFlags = BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public;
-                configType.GetProperty(item.Key, propertyBindingFlags)?.SetValue(config, item.Value, null);
+                var matchedProperty =
+                    properties.FirstOrDefault(p => p.Name.Equals(item.Key, StringComparison.Ordinal)) ??
+                    properties.FirstOrDefault(p => p.Name.Equals(item.Key, StringComparison.OrdinalIgnoreCase));
+
+                matchedProperty?.SetValue(config, item.Value, null);
             }
 
             return config;
