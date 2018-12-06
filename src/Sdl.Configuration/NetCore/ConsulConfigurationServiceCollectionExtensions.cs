@@ -40,13 +40,10 @@ namespace Sdl.Configuration
         /// </summary>
         public static IServiceCollection AddConsul(this IServiceCollection services, Action<ConsulOptions> configuration)
         {
-            services.TryAddSingleton<IConfigurationProvider>(serviceProvider =>
-            {
-                var options = new ConsulOptions();
-                configuration(options);
+            var options = new ConsulOptions();
+            configuration(options);
 
-                return new ConsulConfigurationProvider(options.Url, options.Token, options.Environment);
-            });
+            services.TryAddSingleton<IConfigurationProvider>(serviceProvider => new ConsulConfigurationProvider(options.Url, options.Token, options.Environment));
 
             return services;
         }
