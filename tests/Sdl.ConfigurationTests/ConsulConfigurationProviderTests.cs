@@ -56,6 +56,14 @@ namespace Sdl.ConfigurationTests
             Assert.Equal("environment", exception.ParamName);
         }
 
+        [Fact]
+        public void Ctor_ThrowsException_WhenConsulClientFactoryIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(() => new ConsulConfigurationProvider(_correctUrl, "token", "env", null));
+
+            Assert.Equal("consulClientFactory", exception.ParamName);
+        }
+
         [Theory]
         [InlineData("")]
         [InlineData(null)]
@@ -135,6 +143,18 @@ namespace Sdl.ConfigurationTests
             Assert.NotNull(config);
             Assert.Single(config);
             Assert.Contains("value1", config["key1"]);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void GetServiceConfigAsyncT_ThrowsException_WhenServiceIsNotSpecified(string service)
+        {
+            var provider = new ConsulConfigurationProvider(_correctUrl, "token", "dev");
+
+            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => provider.GetServiceConfigAsync<MangoConfig>(service, "hosting"));
+
+            Assert.Equal("service", exception.Result.ParamName);
         }
 
         [Fact]

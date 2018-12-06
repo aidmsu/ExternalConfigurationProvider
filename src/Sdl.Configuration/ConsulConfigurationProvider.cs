@@ -34,6 +34,7 @@ namespace Sdl.Configuration
             if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
             if (!Uri.TryCreate(url, UriKind.Absolute, out _address)) throw new ArgumentException("Bad url format.", nameof(url));
             if (string.IsNullOrEmpty(environment)) throw new ArgumentNullException(nameof(environment));
+            if (consulClientFactory == null) throw new ArgumentNullException(nameof(consulClientFactory));
 
             _token = token;
             _environment = Normalize(environment);
