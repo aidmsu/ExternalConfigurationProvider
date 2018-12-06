@@ -35,9 +35,6 @@
     <Reference Include="Consul, Version=0.7.2.6, Culture=neutral, PublicKeyToken=20a6ad9a81df1d95, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Consul.0.7.2.6\lib\net45\Consul.dll</HintPath>
     </Reference>
-    <Reference Include="Sdl.Configuration, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Sdl.Configuration.0.2.0\lib\net45\Sdl.Configuration.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http.WebRequest" />
@@ -64,6 +61,11 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Sdl.Configuration\Sdl.Configuration.csproj">
+      <Project>{AD855A53-6408-452E-A2C3-26AAAFFF816D}</Project>
+      <Name>Sdl.Configuration</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
