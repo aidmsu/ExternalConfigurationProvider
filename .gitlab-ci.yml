@@ -3,15 +3,18 @@ stages:
   - test
 
 build:
-  image : microsoft/dotnet:latest
   stage: build
   script: 
     - dotnet build
+  tags:
+    - .net
+
 
 test:
-  image : microsoft/dotnet:latest
   stage: test
   script: 
     - dotnet test
+  tags:
+    - .net
 
 
