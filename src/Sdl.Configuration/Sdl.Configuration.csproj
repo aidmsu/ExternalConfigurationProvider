@@ -7,10 +7,11 @@
     <PackageId>Sdl.Configuration</PackageId>
     <Owners>dorohov</Owners>
     <Description>A .NET library for getting configurations from single place.</Description>
-    
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>0.2.0</Version>
-    <FileVersion>0.2.0.0</FileVersion>
+    <Version>0.2.1</Version>
+    <FileVersion>0.2.1.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
