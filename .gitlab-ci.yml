@@ -1,19 +1,9 @@
 stages:
   - build
-  - test
 
 build:
   stage: build
   script: 
-    - dotnet build src/Sdl.Configuration
+    - powershell .\build.ps1 -Target Pack
   tags:
     - .net
-
-test:
-  stage: test
-  script: 
-    - dotnet test tests/Sdl.Configuration.Tests
-  tags:
-    - .net
-
-
