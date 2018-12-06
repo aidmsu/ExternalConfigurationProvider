@@ -1,0 +1,17 @@
+stages:
+  - build
+  - test
+
+build:
+  image : microsoft/dotnet:latest
+  stage: build
+  script: 
+    - dotnet build
+
+test:
+  image : microsoft/dotnet:latest
+  stage: test
+  script: 
+    - dotnet test
+
+
