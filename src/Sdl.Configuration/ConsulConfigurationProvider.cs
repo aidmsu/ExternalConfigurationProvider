@@ -1,4 +1,5 @@
-using System;
+﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -25,10 +26,14 @@ namespace Sdl.Configuration
         private readonly Uri _address;
         private readonly string _token;
         private readonly string _environment;
+        private readonly bool _useCache;
         private readonly Func<Uri, string, IConsulClient> _consulClientFactory;
+
+        internal readonly ConcurrentDictionary<string, Dictionary<string,string>> ServiceSettingsCache = new ConcurrentDictionary<string, Dictionary<string, string>>();
 
         /// <summary>
         /// Initializes a new instance of the ConsulConfigurationProvider class that gets services settings stored in Consul.
+        /// Settings are cached after getting from Consul. If you don't want cache settings use <see cref="ConsulConfigurationProvider(string, string, string, bool)"/>
         /// </summary>
         /// <param name="url">The absolute url where Consul is hosted.</param>
         /// <param name="token">The Consul authentication token.</param>
@@ -42,11 +47,31 @@ namespace Sdl.Configuration
         /// </code>
         /// </example>
         public ConsulConfigurationProvider(string url, string token, string environment) 
-            : this(url, token, environment, DefaultConsulClientFactory)
+            : this(url, token, environment, true, DefaultConsulClientFactory)
         {
         }
 
-        internal ConsulConfigurationProvider(string url, string token, string environment, Func<Uri, string, IConsulClient> consulClientFactory)
+        /// <summary>
+        /// Initializes a new instance of the ConsulConfigurationProvider class that gets services settings stored in Consul.
+        /// </summary>
+        /// <param name="url">The absolute url where Consul is hosted.</param>
+        /// <param name="token">The Consul authentication token.</param>
+        /// <param name="environment">The environment where app runs.</param>
+        /// <param name="useCache">If settings is cached.</param>
+        /// <exception cref="System.ArgumentNullException">Thrown when the url is not specified.</exception>
+        /// <exception cref="System.ArgumentException">Thrown when the url is not absolute.</exception>
+        /// <exception cref="System.ArgumentNullException">Thrown when the environment is not specified.</exception>
+        /// <example>
+        /// <code>
+        /// var provider = new ConsulConfigurationProvider("http://localhost:8500", "b1gs33cr3t", "staging", true);
+        /// </code>
+        /// </example>
+        public ConsulConfigurationProvider(string url, string token, string environment, bool useCache)
+            : this(url, token, environment, useCache, DefaultConsulClientFactory)
+        {
+        }
+
+        internal ConsulConfigurationProvider(string url, string token, string environment, bool useCache, Func<Uri, string, IConsulClient> consulClientFactory)
         {
             if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
             if (!Uri.TryCreate(url, UriKind.Absolute, out _address)) throw new ArgumentException("Bad url format.", nameof(url));
@@ -55,6 +80,7 @@ namespace Sdl.Configuration
 
             _token = token;
             _environment = environment;
+            _useCache = useCache;
 
             _consulClientFactory = consulClientFactory;
         }
@@ -113,6 +139,17 @@ namespace Sdl.Configuration
 
             var servicePrefix = GetConsulServiceKey(_environment, service, hosting);
 
+            if (_useCache && ServiceSettingsCache.ContainsKey(servicePrefix)) return ServiceSettingsCache[servicePrefix];
+
+            var settings = await GetServiceConfigAsyncFromConsul(servicePrefix);
+
+            return _useCache
+                ? ServiceSettingsCache.GetOrAdd(servicePrefix, settings)
+                : settings;
+        }
+
+        private async Task<Dictionary<string, string>> GetServiceConfigAsyncFromConsul(string servicePrefix)
+        {
             using (var client = _consulClientFactory(_address, _token))
             {
                 var kvPairResult = await client.KV.List(servicePrefix);
@@ -122,8 +159,8 @@ namespace Sdl.Configuration
                 if (response == null || !response.Any()) return null;
 
                 return response.ToDictionary(
-                    kv => kv.Key.Replace($"{servicePrefix}", String.Empty), 
-                    kv=> kv.Value == null ? string.Empty : Encoding.UTF8.GetString(kv.Value, 0, kv.Value.Length));
+                    kv => kv.Key.Replace(servicePrefix, String.Empty),
+                    kv => kv.Value == null ? string.Empty : Encoding.UTF8.GetString(kv.Value, 0, kv.Value.Length));
             }
         }
 

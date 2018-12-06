@@ -6,6 +6,12 @@ namespace Sdl.Configuration
     /// <exclude />
     public class ConsulOptions
     {
+        /// <exclude />
+        public ConsulOptions()
+        {
+            UseCache = true;
+        }
+
         private string _url;
         private string _environment;
 
@@ -42,6 +48,11 @@ namespace Sdl.Configuration
                 _environment = value;
             }
         }
+
+        /// <summary>
+        /// If provider caches settings. Default: true.
+        /// </summary>
+        public bool UseCache { get; set; }
     }
 }
 #endif

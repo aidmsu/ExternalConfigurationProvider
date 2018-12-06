@@ -30,6 +30,7 @@ namespace Sdl.NetCoreServiceExample
                     options.Url = consulUrl;
                     options.Token = consulToken;
                     options.Environment = "Debug";
+                    options.UseCache = false;
                 })
                 .BuildServiceProvider();
 
