@@ -1,9 +1,0 @@
-stages:
-  - build
-
-build:
-  stage: build
-  script: 
-    - powershell .\build.ps1 -Target Pack
-  tags:
-    - .net
