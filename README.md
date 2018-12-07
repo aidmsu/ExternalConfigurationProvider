@@ -1,7 +1,7 @@
 # ExternalConfigurationProvider
 
 [![AppVeyor](https://img.shields.io/appveyor/ci/aidmsu/ExternalConfigurationProvider/master.svg?label=appveyor)](https://ci.appveyor.com/project/aidmsu/ExternalConfigurationProvider/branch/master)
-
+[![Codecov branch](https://img.shields.io/codecov/c/github/aidmsu/ExternalConfigurationProvider/master.svg)](https://codecov.io/gh/aidmsu/ExternalConfigurationProvider)
 ExternalConfigurationProvider is a .NET library for getting services configs from external centralized configuration store.
 
 ## Features
