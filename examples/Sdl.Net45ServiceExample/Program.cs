@@ -10,7 +10,15 @@ namespace Sdl.Net45ServiceExample
             var consulUrl = Properties.Settings.Default.ConsulUrl;
             var consulToken = Properties.Settings.Default.ConsulToken;
 
-            var provider = new ConsulConfigurationProvider(consulUrl, consulToken, "debug");
+            var consulConfig = new ConsulConfig
+            {
+                Url = consulUrl,
+                Token = consulToken,
+                Environment = "debug"
+            };
+
+            var store = new ConsulConfigurationStore(consulConfig.Url, consulConfig.Token);
+            var provider = new ExternalConfigurationProvider(store, consulConfig);
 
             var mangoSettingsTask = provider.GetServiceConfigAsync<MangoConfig>("mango");
 

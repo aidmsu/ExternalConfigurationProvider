@@ -3,22 +3,9 @@
 namespace Sdl.Configuration
 {
     /// <exclude />
-    public class ConsulConfig
+    public class ConsulConfig : ProviderConfig
     {
-        /// <summary>
-        /// The default timespan to wait before the config request times out. Use <see cref="ConsulConfig.Timeout"/> to overwrite it.
-        /// </summary>
-        public readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(15);
-
-        /// <exclude />
-        public ConsulConfig()
-        {
-            UseCache = true;
-            Timeout = DefaultTimeout;
-        }
-
         private string _url;
-        private string _environment;
 
         /// <summary>
         /// The absolute url where Consul is hosted.
@@ -43,28 +30,11 @@ namespace Sdl.Configuration
         /// </summary>
         public string Token { get; set; }
 
-        /// <summary>
-        /// The environment where app runs.
-        /// </summary>
-        public string Environment
-        {
-            get => _environment;
-            set
-            {
-                if (string.IsNullOrEmpty(value)) throw new ArgumentNullException(nameof(Environment));
-
-                _environment = value;
-            }
-        }
-
-        /// <summary>
-        /// If provider caches settings. Default: true.
-        /// </summary>
-        public bool UseCache { get; set; }
+        
 
         /// <summary>
         /// The timespan to wait before the config request times out.
         /// </summary>
-        public TimeSpan Timeout { get; set; }
+        public TimeSpan? Timeout { get; set; }
     }
 }

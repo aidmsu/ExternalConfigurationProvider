@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 namespace Sdl.Configuration
 {
     /// <summary>
-    /// Provides methods to get service settings from central storage.
+    /// Provides methods to get service settings from external configuration storage.
     /// </summary>
-    public interface IConfigurationProvider
+    public interface IExternalConfigurationProvider
     {
         /// <summary>
-        /// Gets service settings from central storage and converts them to the specified .NET type.
+        /// Gets service settings from external storage and converts them to the specified .NET type.
         /// </summary>
         /// <param name="service">The service name.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -23,7 +23,7 @@ namespace Sdl.Configuration
         Task<T> GetServiceConfigAsync<T>(string service, CancellationToken cancellationToken = default(CancellationToken)) where T : new();
 
         /// <summary>
-        /// Gets service settings from central storage and converts them to the specified .NET type.
+        /// Gets service settings from external store and converts them to the specified .NET type.
         /// </summary>
         /// <param name="service">The service name.</param>
         /// <param name="hosting">The hosting where the service is hosted. Optional.</param>
@@ -37,7 +37,7 @@ namespace Sdl.Configuration
         Task<T> GetServiceConfigAsync<T>(string service, string hosting, CancellationToken cancellationToken = default(CancellationToken)) where T : new();
 
         /// <summary>
-        /// Gets service settings from central storage.
+        /// Gets service settings from external store.
         /// </summary>
         /// <param name="service">The service name.</param>
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
@@ -51,7 +51,7 @@ namespace Sdl.Configuration
 
 
         /// <summary>
-        /// Gets service settings from central storage.
+        /// Gets service settings from external store.
         /// </summary>
         /// <param name="service">The service name.</param>
         /// <param name="hosting">The hosting where the service is hosted. Optional.</param>
@@ -63,7 +63,5 @@ namespace Sdl.Configuration
         /// </code>
         /// </example>
         Task<Dictionary<string, string>> GetServiceConfigAsync(string service, string hosting, CancellationToken cancellationToken = default(CancellationToken));
-
-       
     }
 }

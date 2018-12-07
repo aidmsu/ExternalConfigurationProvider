@@ -1,31 +1,28 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Consul;
 using Sdl.Configuration;
 using Xunit;
 using Moq;
 
 namespace Sdl.ConfigurationTests
 {
-    public class ConsulConfigurationProviderTests
+    public class ExternalConfigurationProviderTests
     {
         private readonly string _correctUrl = "http://localhost";
-        private readonly Mock<IConsulClient> _mockConsulClient = new Mock<IConsulClient>();
+        private readonly Mock<IConfigurationStore> _mockStore = new Mock<IConfigurationStore>();
 
         [Fact]
-        public void Ctor_ThrowsException_WhenConsulClientFactoryIsNull()
+        public void Ctor_ThrowsException_WhenStoreIsNull()
         {
-            var exception = Assert.Throws<ArgumentNullException>(() => new ConsulConfigurationProvider(new ConsulConfig
+            var exception = Assert.Throws<ArgumentNullException>(() => new ExternalConfigurationProvider(null, new ConsulConfig
             {
                 Url = _correctUrl,
                 Environment = "dev"
-            }, null));
+            }));
 
-            Assert.Equal("consulClientFactory", exception.ParamName);
+            Assert.Equal("store", exception.ParamName);
         }
 
         [Theory]
@@ -43,7 +40,7 @@ namespace Sdl.ConfigurationTests
         [Fact]
         public void GetConsulServiceKey_ReturnsCorrectKey_WhenServiceAndHostingAreSpecified()
         {
-            var key = ConsulConfigurationProvider.GetConsulServiceKey("dev", "mango", "azure");
+            var key = ExternalConfigurationProvider.GetFullServiceName("dev", "mango", "azure");
 
             Assert.Equal("dev/azure/mango/", key);
         }
@@ -53,7 +50,7 @@ namespace Sdl.ConfigurationTests
         [InlineData(null)]
         public void GetConsulServiceKey_ReturnsCorrectKey_WhenHostinIsNotSpecified(string hosting)
         {
-            var key = ConsulConfigurationProvider.GetConsulServiceKey("dev", "mango", hosting);
+            var key = ExternalConfigurationProvider.GetFullServiceName("dev", "mango", hosting);
 
             Assert.Equal("dev/mango/", key);
         }
@@ -61,7 +58,7 @@ namespace Sdl.ConfigurationTests
         [Fact]
         public async Task GetServiceConfigAsync_HandleNullResponse()
         {
-            ConsulClientShouldReturn(null);
+            StoreShouldReturn(null);
 
             var provider = CreateProvider(_correctUrl, "token", "debug", false);
 
@@ -73,7 +70,7 @@ namespace Sdl.ConfigurationTests
         [Fact]
         public async Task GetServiceConfigAsync_HandleEmpty()
         { 
-            ConsulClientShouldReturn(new Dictionary<string, string>());
+            StoreShouldReturn(new Dictionary<string, string>());
 
             var provider = CreateProvider(_correctUrl, "token", "debug", false);
 
@@ -83,9 +80,9 @@ namespace Sdl.ConfigurationTests
         }
 
         [Fact]
-        public async Task GetServiceConfigAsync_ConvertConsulResponseToSettingsDictionary()
+        public async Task GetServiceConfigAsync_ReturnTheSameAsStore()
         {
-            ConsulClientShouldReturn(new Dictionary<string, string> { { "debug/mango/key1", "value1" } });
+            StoreShouldReturn(new Dictionary<string, string> { { "key1", "value1" } });
 
             var provider = CreateProvider(_correctUrl, "token", "debug", false);
 
@@ -102,7 +99,7 @@ namespace Sdl.ConfigurationTests
             var provider = CreateProvider(_correctUrl, "token", "debug", true);
 
             provider.ServiceSettingsCache["debug/mango/"] = new Dictionary<string, string> {{"key1", "cachedValue"}};
-            ConsulClientShouldReturn(new Dictionary<string, string> { { "debug/mango/key1", "consulValue" } });
+            StoreShouldReturn(new Dictionary<string, string> { { "key1", "consulValue" } });
 
             var config = await provider.GetServiceConfigAsync("mango");
 
@@ -117,7 +114,7 @@ namespace Sdl.ConfigurationTests
             var provider = CreateProvider(_correctUrl, "token", "debug", false);
 
             provider.ServiceSettingsCache["debug/mango/"] = new Dictionary<string, string> { { "key1", "cachedValue" } };
-            ConsulClientShouldReturn(new Dictionary<string, string> { { "debug/mango/key1", "consulValue" } });
+            StoreShouldReturn(new Dictionary<string, string> { { "key1", "consulValue" } });
 
             var config = await provider.GetServiceConfigAsync("mango");
 
@@ -132,7 +129,7 @@ namespace Sdl.ConfigurationTests
             var provider = CreateProvider(_correctUrl, "token", "debug", true);
 
             provider.ServiceSettingsCache["debug/mango1/"] = new Dictionary<string, string> { { "key1", "cachedValue" } };
-            ConsulClientShouldReturn(new Dictionary<string, string> { { "debug/mango/key1", "consulValue" } });
+            StoreShouldReturn(new Dictionary<string, string> { { "key1", "consulValue" } });
 
             var config = await provider.GetServiceConfigAsync("mango");
 
@@ -156,10 +153,10 @@ namespace Sdl.ConfigurationTests
         [Fact]
         public async Task GetServiceConfigAsyncT_ConvertConsulResponseToSettingsObject()
         {
-            ConsulClientShouldReturn(new Dictionary<string, string>
+            StoreShouldReturn(new Dictionary<string, string>
             {
-                { "debug/mango/ApiKey", "secretKey" },
-                { "debug/mango/ApiSignature", "secretSignature" }
+                { "ApiKey", "secretKey" },
+                { "ApiSignature", "secretSignature" }
             });
 
             var provider = CreateProvider(_correctUrl, "token", "debug", false);
@@ -174,10 +171,10 @@ namespace Sdl.ConfigurationTests
         [Fact]
         public async Task GetServiceConfigAsyncT_IsNotCaseSensitive()
         {
-            ConsulClientShouldReturn(new Dictionary<string, string>
+            StoreShouldReturn(new Dictionary<string, string>
             {
-                { "debug/mango/apiKey", "secretKey" },
-                { "debug/mango/ApiSigNaturE", "secretSignature" }
+                { "apiKey", "secretKey" },
+                { "ApiSigNaturE", "secretSignature" }
             });
 
             var provider = CreateProvider(_correctUrl, "token", "debug", false);
@@ -192,10 +189,10 @@ namespace Sdl.ConfigurationTests
         [Fact]
         public async Task GetServiceConfigAsyncT_ReturnsCorrectObject_WhenTHasPropertiesDifferingOnlyCase()
         {
-            ConsulClientShouldReturn(new Dictionary<string, string>
+            StoreShouldReturn(new Dictionary<string, string>
             {
-                { "debug/mango/ApiKey", "secretKey" },
-                { "debug/mango/ApiSignature", "secretSignature" }
+                { "ApiKey", "secretKey" },
+                { "ApiSignature", "secretSignature" }
             });
 
             var provider = CreateProvider(_correctUrl, "token", "debug", false);
@@ -207,15 +204,13 @@ namespace Sdl.ConfigurationTests
             Assert.Equal("secretSignature", config.ApiSignature);
         }
 
-        private void ConsulClientShouldReturn(IEnumerable<KeyValuePair<string, string>> keyValues)
+        private void StoreShouldReturn(Dictionary<string, string> keyValues)
         {
-            var kvPairs = keyValues?.Select(kv => new KVPair(kv.Key) {Value = Encoding.UTF8.GetBytes(kv.Value)}).ToArray();
-
-            _mockConsulClient.Setup(client => client.KV.List(It.IsAny<string>(), It.IsAny<CancellationToken>()))
-                .Returns(Task.FromResult(new QueryResult<KVPair[]> { Response = kvPairs }));
+            _mockStore.Setup(store => store.GetServiceConfigAsync(It.IsAny<string>(), It.IsAny<string>(),
+                    It.IsAny<string>(), It.IsAny<CancellationToken>())).Returns(Task.FromResult(keyValues));
         }
 
-        private ConsulConfigurationProvider CreateProvider(string url, string token, string environment, bool useCache)
+        private ExternalConfigurationProvider CreateProvider(string url, string token, string environment, bool useCache)
         {
             var config = new ConsulConfig
             {
@@ -225,7 +220,7 @@ namespace Sdl.ConfigurationTests
                 UseCache = useCache
             };
 
-            return new ConsulConfigurationProvider(config, (address, t, timeout) => _mockConsulClient.Object);
+            return new ExternalConfigurationProvider(_mockStore.Object, config);
         }
 
         private class MangoConfig
