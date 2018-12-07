@@ -15,73 +15,74 @@ namespace Sdl.Configuration
     /// </summary>
     public class ConsulConfigurationProvider : IConfigurationProvider
     {
-        private static readonly Func<Uri, string, IConsulClient> DefaultConsulClientFactory = (address, token) =>
+        private static readonly Func<Uri, string, TimeSpan, IConsulClient> DefaultConsulClientFactory = (address, token, timeout) =>
         {
             return new ConsulClient(config =>
             {
                 config.Address = address;
                 config.Token = token;
+                config.WaitTime = timeout;
             });
         };
+
 
         private readonly Uri _address;
         private readonly string _token;
         private readonly string _environment;
         private readonly bool _useCache;
-        private readonly Func<Uri, string, IConsulClient> _consulClientFactory;
+        private readonly TimeSpan _timeout;
+        private readonly Func<Uri, string, TimeSpan, IConsulClient> _consulClientFactory;
 
         internal readonly ConcurrentDictionary<string, Dictionary<string,string>> ServiceSettingsCache = new ConcurrentDictionary<string, Dictionary<string, string>>();
 
         /// <summary>
         /// Initializes a new instance of the ConsulConfigurationProvider class that gets services settings stored in Consul.
-        /// Settings are cached after getting from Consul. If you don't want cache settings use <see cref="ConsulConfigurationProvider(string, string, string, bool)"/>
+        /// Settings are cached after getting from Consul. If you don't want cache settings use <see cref="ConsulConfigurationProvider(ConsulConfig)"/>
         /// </summary>
         /// <param name="url">The absolute url where Consul is hosted.</param>
         /// <param name="token">The Consul authentication token.</param>
         /// <param name="environment">The environment where app runs.</param>
-        /// <exception cref="System.ArgumentNullException">Thrown when the url is not specified.</exception>
-        /// <exception cref="System.ArgumentException">Thrown when the url is not absolute.</exception>
-        /// <exception cref="System.ArgumentNullException">Thrown when the environment is not specified.</exception>
+        /// <exception cref="System.ArgumentNullException">Thrown when the options.Url is not specified.</exception>
+        /// <exception cref="System.ArgumentException">Thrown when the options.Url is not absolute.</exception>
+        /// <exception cref="System.ArgumentNullException">Thrown when the options.Environment is not specified.</exception>
         /// <example>
         /// <code>
         /// var provider = new ConsulConfigurationProvider("http://localhost:8500", "b1gs33cr3t", "staging");
         /// </code>
         /// </example>
-        public ConsulConfigurationProvider(string url, string token, string environment) 
-            : this(url, token, environment, true, DefaultConsulClientFactory)
+        public ConsulConfigurationProvider(string url, string token, string environment)
+            : this(new ConsulConfig {Url =  url, Token = token, Environment = environment}, DefaultConsulClientFactory)
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the ConsulConfigurationProvider class that gets services settings stored in Consul.
         /// </summary>
-        /// <param name="url">The absolute url where Consul is hosted.</param>
-        /// <param name="token">The Consul authentication token.</param>
-        /// <param name="environment">The environment where app runs.</param>
-        /// <param name="useCache">If settings is cached.</param>
-        /// <exception cref="System.ArgumentNullException">Thrown when the url is not specified.</exception>
-        /// <exception cref="System.ArgumentException">Thrown when the url is not absolute.</exception>
-        /// <exception cref="System.ArgumentNullException">Thrown when the environment is not specified.</exception>
+        /// <param name="config">Consul configuration.</param>
+        /// <exception cref="System.ArgumentNullException">Thrown when the options.Url is not specified.</exception>
+        /// <exception cref="System.ArgumentException">Thrown when the options.Url is not absolute.</exception>
+        /// <exception cref="System.ArgumentNullException">Thrown when the options.Environment is not specified.</exception>
         /// <example>
         /// <code>
-        /// var provider = new ConsulConfigurationProvider("http://localhost:8500", "b1gs33cr3t", "staging", true);
+        /// var provider = new ConsulConfigurationProvider("http://localhost:8500", "b1gs33cr3t", "staging");
         /// </code>
         /// </example>
-        public ConsulConfigurationProvider(string url, string token, string environment, bool useCache)
-            : this(url, token, environment, useCache, DefaultConsulClientFactory)
+        public ConsulConfigurationProvider(ConsulConfig config) 
+            : this(config, DefaultConsulClientFactory)
         {
         }
 
-        internal ConsulConfigurationProvider(string url, string token, string environment, bool useCache, Func<Uri, string, IConsulClient> consulClientFactory)
+        internal ConsulConfigurationProvider(ConsulConfig config, Func<Uri, string, TimeSpan, IConsulClient> consulClientFactory)
         {
-            if (string.IsNullOrEmpty(url)) throw new ArgumentNullException(nameof(url));
-            if (!Uri.TryCreate(url, UriKind.Absolute, out _address)) throw new ArgumentException("Bad url format.", nameof(url));
-            if (string.IsNullOrEmpty(environment)) throw new ArgumentNullException(nameof(environment));
+            if (string.IsNullOrEmpty(config.Url)) throw new ArgumentNullException(nameof(config.Url));
+            if (!Uri.TryCreate(config.Url, UriKind.Absolute, out _address)) throw new ArgumentException("Bad url format.", nameof(config.Url));
+            if (string.IsNullOrEmpty(config.Environment)) throw new ArgumentNullException(nameof(config.Environment));
             if (consulClientFactory == null) throw new ArgumentNullException(nameof(consulClientFactory));
 
-            _token = token;
-            _environment = environment;
-            _useCache = useCache;
+            _token = config.Token;
+            _environment = config.Environment;
+            _useCache = config.UseCache;
+            _timeout = config.Timeout;
 
             _consulClientFactory = consulClientFactory;
         }
@@ -181,7 +182,7 @@ namespace Sdl.Configuration
 
         private async Task<Dictionary<string, string>> GetServiceConfigAsyncFromConsul(string servicePrefix, CancellationToken cancellationToken)
         {
-            using (var client = _consulClientFactory(_address, _token))
+            using (var client = _consulClientFactory(_address, _token, _timeout))
             {
                 var kvPairResult = await client.KV.List(servicePrefix, cancellationToken);
 

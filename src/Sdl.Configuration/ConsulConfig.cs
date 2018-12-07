@@ -1,22 +1,27 @@
 ﻿using System;
 
-#if NETSTANDARD1_5
 namespace Sdl.Configuration
 {
     /// <exclude />
-    public class ConsulOptions
+    public class ConsulConfig
     {
+        /// <summary>
+        /// The default timespan to wait before the config request times out. Use <see cref="ConsulConfig.Timeout"/> to overwrite it.
+        /// </summary>
+        public readonly TimeSpan DefaultTimeout = TimeSpan.FromSeconds(15);
+
         /// <exclude />
-        public ConsulOptions()
+        public ConsulConfig()
         {
             UseCache = true;
+            Timeout = DefaultTimeout;
         }
 
         private string _url;
         private string _environment;
 
         /// <summary>
-        /// The absolute url where Consul is hosted
+        /// The absolute url where Consul is hosted.
         /// </summary>
         public string Url
         {
@@ -24,11 +29,14 @@ namespace Sdl.Configuration
             set
             {
                 if (string.IsNullOrEmpty(value)) throw new ArgumentNullException(nameof(Url));
-                if (!Uri.TryCreate(value, UriKind.Absolute, out _)) throw new ArgumentException("Bad url format.", nameof(Url));
+                if (!Uri.TryCreate(value, UriKind.Absolute, out var address)) throw new ArgumentException("Bad url format.", nameof(Url));
 
+                Address = address;
                 _url = value;
             }
         }
+
+        internal Uri Address { get; private set; }
 
         /// <summary>
         /// The Consul authentication token.
@@ -53,6 +61,10 @@ namespace Sdl.Configuration
         /// If provider caches settings. Default: true.
         /// </summary>
         public bool UseCache { get; set; }
+
+        /// <summary>
+        /// The timespan to wait before the config request times out.
+        /// </summary>
+        public TimeSpan Timeout { get; set; }
     }
 }
-#endif

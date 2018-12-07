@@ -17,49 +17,13 @@ namespace Sdl.ConfigurationTests
         private readonly Mock<IConsulClient> _mockConsulClient = new Mock<IConsulClient>();
 
         [Fact]
-        public void Ctor_ThrowsException_WhenUrlIsNull()
-        {
-            var exception = Assert.Throws<ArgumentNullException>(() => new ConsulConfigurationProvider(null, "token", "debug"));
-
-            Assert.Equal("url", exception.ParamName);
-        }
-
-        [Fact]
-        public void Ctor_ThrowsException_WhenUrlIsEmpty()
-        {
-            var exception = Assert.Throws<ArgumentNullException>(() => new ConsulConfigurationProvider(string.Empty, "token", "debug"));
-
-            Assert.Equal("url", exception.ParamName);
-        }
-
-        [Fact]
-        public void Ctor_ThrowsException_WhenUrlIsBad()
-        {
-            var exception = Assert.Throws<ArgumentException>(() => new ConsulConfigurationProvider("localhost", "token", "debug"));
-
-            Assert.Equal("url", exception.ParamName);
-        }
-
-        [Fact]
-        public void Ctor_ThrowsException_WhenEnvironmentIsNull()
-        {
-            var exception = Assert.Throws<ArgumentNullException>(() => new ConsulConfigurationProvider(_correctUrl, "token", null));
-
-            Assert.Equal("environment", exception.ParamName);
-        }
-
-        [Fact]
-        public void Ctor_ThrowsException_WhenEnvironmentIsEmpty()
-        {
-            var exception = Assert.Throws<ArgumentNullException>(() => new ConsulConfigurationProvider(_correctUrl, "token", null));
-
-            Assert.Equal("environment", exception.ParamName);
-        }
-
-        [Fact]
         public void Ctor_ThrowsException_WhenConsulClientFactoryIsNull()
         {
-            var exception = Assert.Throws<ArgumentNullException>(() => new ConsulConfigurationProvider(_correctUrl, "token", "env", false, null));
+            var exception = Assert.Throws<ArgumentNullException>(() => new ConsulConfigurationProvider(new ConsulConfig
+            {
+                Url = _correctUrl,
+                Environment = "dev"
+            }, null));
 
             Assert.Equal("consulClientFactory", exception.ParamName);
         }
@@ -69,7 +33,7 @@ namespace Sdl.ConfigurationTests
         [InlineData(null)]
         public void GetServiceConfigAsync_ThrowsException_WhenServiceIsNotSpecified(string service)
         {
-            var provider = new ConsulConfigurationProvider(_correctUrl, "token", "dev");
+            var provider = CreateProvider(_correctUrl, "token", "dev", true);
 
             var exception = Assert.ThrowsAsync<ArgumentNullException>(() => provider.GetServiceConfigAsync(service, "hosting"));
 
@@ -111,7 +75,7 @@ namespace Sdl.ConfigurationTests
         {
             ConsulClientShouldReturn(null);
 
-            var provider = new ConsulConfigurationProvider(_correctUrl, "token", "debug", false, (address, token) => _mockConsulClient.Object);
+            var provider = CreateProvider(_correctUrl, "token", "debug", false);
 
             var config = await provider.GetServiceConfigAsync("mango");
 
@@ -123,7 +87,7 @@ namespace Sdl.ConfigurationTests
         { 
             ConsulClientShouldReturn(new Dictionary<string, string>());
 
-            var provider = new ConsulConfigurationProvider(_correctUrl, "token", "debug", false, (address, token) => _mockConsulClient.Object);
+            var provider = CreateProvider(_correctUrl, "token", "debug", false);
 
             var config = await provider.GetServiceConfigAsync("mango");
 
@@ -135,7 +99,7 @@ namespace Sdl.ConfigurationTests
         {
             ConsulClientShouldReturn(new Dictionary<string, string> { { "debug/mango/key1", "value1" } });
 
-            var provider = new ConsulConfigurationProvider(_correctUrl, "token", "debug", false, (address, token) => _mockConsulClient.Object);
+            var provider = CreateProvider(_correctUrl, "token", "debug", false);
 
             var config = await provider.GetServiceConfigAsync("mango");
 
@@ -147,7 +111,7 @@ namespace Sdl.ConfigurationTests
         [Fact]
         public async Task GetServiceConfigAsync_UseCache_WhenSettingsIsAlreadyInCache()
         {
-            var provider = new ConsulConfigurationProvider(_correctUrl, "token", "debug", true, (address, token) => _mockConsulClient.Object);
+            var provider = CreateProvider(_correctUrl, "token", "debug", true);
 
             provider.ServiceSettingsCache["debug/mango/"] = new Dictionary<string, string> {{"key1", "cachedValue"}};
             ConsulClientShouldReturn(new Dictionary<string, string> { { "debug/mango/key1", "consulValue" } });
@@ -162,7 +126,7 @@ namespace Sdl.ConfigurationTests
         [Fact]
         public async Task GetServiceConfigAsync_IgnoreCache_WhenUseCacheIsFalse()
         {
-            var provider = new ConsulConfigurationProvider(_correctUrl, "token", "debug", false, (address, token) => _mockConsulClient.Object);
+            var provider = CreateProvider(_correctUrl, "token", "debug", false);
 
             provider.ServiceSettingsCache["debug/mango/"] = new Dictionary<string, string> { { "key1", "cachedValue" } };
             ConsulClientShouldReturn(new Dictionary<string, string> { { "debug/mango/key1", "consulValue" } });
@@ -177,7 +141,7 @@ namespace Sdl.ConfigurationTests
         [Fact]
         public async Task GetServiceConfigAsync_GetsSettingsFromConsul_WhenUseCacheIsTrueButCacheDoesntContainValue()
         {
-            var provider = new ConsulConfigurationProvider(_correctUrl, "token", "debug", true, (address, token) => _mockConsulClient.Object);
+            var provider = CreateProvider(_correctUrl, "token", "debug", true);
 
             provider.ServiceSettingsCache["debug/mango1/"] = new Dictionary<string, string> { { "key1", "cachedValue" } };
             ConsulClientShouldReturn(new Dictionary<string, string> { { "debug/mango/key1", "consulValue" } });
@@ -194,7 +158,7 @@ namespace Sdl.ConfigurationTests
         [InlineData(null)]
         public void GetServiceConfigAsyncT_ThrowsException_WhenServiceIsNotSpecified(string service)
         {
-            var provider = new ConsulConfigurationProvider(_correctUrl, "token", "dev");
+            var provider = CreateProvider(_correctUrl, "token", "dev", true);
 
             var exception = Assert.ThrowsAsync<ArgumentNullException>(() => provider.GetServiceConfigAsync<MangoConfig>(service, "hosting"));
 
@@ -210,7 +174,7 @@ namespace Sdl.ConfigurationTests
                 { "debug/mango/ApiSignature", "secretSignature" }
             });
 
-            var provider = new ConsulConfigurationProvider(_correctUrl, "token", "debug", false, (address, token) => _mockConsulClient.Object);
+            var provider = CreateProvider(_correctUrl, "token", "debug", false);
 
             var config = await provider.GetServiceConfigAsync<MangoConfig>("mango");
 
@@ -228,7 +192,7 @@ namespace Sdl.ConfigurationTests
                 { "debug/mango/ApiSigNaturE", "secretSignature" }
             });
 
-            var provider = new ConsulConfigurationProvider(_correctUrl, "token", "debug", false, (address, token) => _mockConsulClient.Object);
+            var provider = CreateProvider(_correctUrl, "token", "debug", false);
 
             var config = await provider.GetServiceConfigAsync<MangoConfig>("mango");
 
@@ -246,7 +210,7 @@ namespace Sdl.ConfigurationTests
                 { "debug/mango/ApiSignature", "secretSignature" }
             });
 
-            var provider = new ConsulConfigurationProvider(_correctUrl, "token", "debug", false, (address, token) => _mockConsulClient.Object);
+            var provider = CreateProvider(_correctUrl, "token", "debug", false);
 
             var config = await provider.GetServiceConfigAsync<MangoConfigWithPropertiesDifferingOnlyCase>("mango");
 
@@ -261,6 +225,19 @@ namespace Sdl.ConfigurationTests
 
             _mockConsulClient.Setup(client => client.KV.List(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.FromResult(new QueryResult<KVPair[]> { Response = kvPairs }));
+        }
+
+        private ConsulConfigurationProvider CreateProvider(string url, string token, string environment, bool useCache)
+        {
+            var config = new ConsulConfig
+            {
+                Url = url,
+                Token = token,
+                Environment = environment,
+                UseCache = useCache
+            };
+
+            return new ConsulConfigurationProvider(config, (address, t, timeout) => _mockConsulClient.Object);
         }
 
         private class MangoConfig
