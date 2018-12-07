@@ -100,7 +100,7 @@ namespace Sdl.Configuration
         /// </example>
         public async Task<T> GetServiceConfigAsync<T>(string service, string hosting = null) where T : new()
         {
-            var dictionary = await GetServiceConfigAsync(service, hosting);
+            var serviceDictionaryConfig = await GetServiceConfigAsync(service, hosting);
 
             var config = new T();
             var configType = config.GetType().GetTypeInfo();
@@ -108,7 +108,7 @@ namespace Sdl.Configuration
             var propertyBindingFlags = BindingFlags.IgnoreCase | BindingFlags.Instance | BindingFlags.Public;
             var properties = configType.GetProperties(propertyBindingFlags);
 
-            foreach (var item in dictionary)
+            foreach (var item in serviceDictionaryConfig)
             {
                 var matchedProperty =
                     properties.FirstOrDefault(p => p.Name.Equals(item.Key, StringComparison.Ordinal)) ??
