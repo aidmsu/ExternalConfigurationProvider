@@ -1,8 +1,8 @@
-# Sdl.Configuration
+# ExternalConfigurationProvider
 
-[![pipeline status](https://gitlab.corp.smartdriving.io/dorohov/luv.configuration/badges/master/pipeline.svg)](https://gitlab.corp.smartdriving.io/dorohov/luv.configuration/commits/master)
+[![AppVeyor](https://img.shields.io/appveyor/ci/aidmsu/ExternalConfigurationProvider/master.svg?label=appveyor)](https://ci.appveyor.com/project/aidmsu/ExternalConfigurationProvider/branch/master)
 
-Sdl.Configuration is a .NET library for getting services configs from external centralized configuration store.
+ExternalConfigurationProvider is a .NET library for getting services configs from external centralized configuration store.
 
 ## Features
 
