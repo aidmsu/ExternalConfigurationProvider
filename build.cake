@@ -50,7 +50,10 @@ Task("TestCoverage").IsDependentOn("Test").Does(() =>
             .WithFilter("-[Sdl.Configuration.Tests]*"));
 });
 
-Task("Upload-Coverage").IsDependentOn("TestCoverage").Does(() =>
+Task("Upload-Coverage")
+    .WithCriteria(AppVeyor.IsRunningOnAppVeyor)
+    .IsDependentOn("TestCoverage")
+    .Does(() =>
 {
     Codecov("coverage.xml");
 });
