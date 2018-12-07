@@ -1,5 +1,7 @@
 #tool "nuget:?package=xunit.runner.console"
 #tool "nuget:?package=OpenCover"
+#tool nuget:?package=Codecov
+#addin nuget:?package=Cake.Codecov
 
 var configuration = Argument("configuration", "Release");
 var version = Argument<string>("buildVersion", null);
@@ -48,7 +50,12 @@ Task("TestCoverage").IsDependentOn("Test").Does(() =>
             .WithFilter("-[Sdl.Configuration.Tests]*"));
 });
 
-Task("Pack").IsDependentOn("TestCoverage").Does(()=> 
+Task("Upload-Coverage").IsDependentOn("TestCoverage").Does(() =>
+{
+    Codecov("coverage.xml");
+});
+
+Task("Pack").IsDependentOn("Upload-Coverage").Does(()=> 
 {
     CreateDirectory("build");
     
