@@ -11,7 +11,7 @@ namespace Sdl.ConfigurationTests
     public class ExternalConfigurationProviderTests
     {
         private readonly string _correctUrl = "http://localhost";
-        private readonly Mock<IConfigurationStore> _mockStore = new Mock<IConfigurationStore>();
+        private readonly Mock<IExternalConfigurationStore> _mockStore = new Mock<IExternalConfigurationStore>();
 
         [Fact]
         public void Ctor_ThrowsException_WhenStoreIsNull()

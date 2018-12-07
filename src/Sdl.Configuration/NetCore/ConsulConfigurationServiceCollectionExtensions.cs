@@ -18,10 +18,10 @@ namespace Sdl.Configuration
             var config = new ConsulConfig();
             configuration(config);
 
-            services.TryAddSingleton<IConfigurationStore>(serviceProvider => new ConsulConfigurationStore(config));
+            services.TryAddSingleton<IExternalConfigurationStore>(serviceProvider => new ConsulConfigurationStore(config));
 
-            services.TryAddSingleton<IConfigurationProvider>(serviceProvider => new ExternalConfigurationProvider(
-                serviceProvider.GetRequiredService<IConfigurationStore>(), 
+            services.TryAddSingleton<IExternalConfigurationProvider>(serviceProvider => new ExternalConfigurationProvider(
+                serviceProvider.GetRequiredService<IExternalConfigurationStore>(), 
                 config));
 
             return services;

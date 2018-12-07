@@ -5,13 +5,12 @@ using System.Threading.Tasks;
 using Sdl.Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using IConfigurationProvider = Sdl.Configuration.IConfigurationProvider;
 
 namespace Sdl.NetCoreServiceExample
 {
     class Program
     {
-        private static IConfigurationProvider _configurationProvider;
+        private static IExternalConfigurationProvider _configurationProvider;
 
         static async Task Main(string[] args)
         {
@@ -34,7 +33,7 @@ namespace Sdl.NetCoreServiceExample
                 })
                 .BuildServiceProvider();
 
-            _configurationProvider = serviceProvider.GetService<IConfigurationProvider>();
+            _configurationProvider = serviceProvider.GetService<IExternalConfigurationProvider>();
 
             var mangoKey = configuration.GetSection("Consul:MangoKey").Value;
 
