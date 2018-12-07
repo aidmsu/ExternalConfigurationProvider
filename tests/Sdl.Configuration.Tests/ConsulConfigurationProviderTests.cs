@@ -58,18 +58,6 @@ namespace Sdl.ConfigurationTests
             Assert.Equal("dev/mango/", key);
         }
 
-        [Theory]
-        [InlineData("production", "telephony", "azurE")]
-        [InlineData("Production", "telephonY", "Azure")]
-        [InlineData("productioN", "TelephonY", "AZURE")]
-        [InlineData("PRODUCTION", "TELEPHONY", "AzurE")]
-        public void GetConsulServiceKey_ReturnsNormalizedKey(string env, string service, string hosting)
-        {
-            var key = ConsulConfigurationProvider.GetConsulServiceKey(env, service, hosting);
-
-            Assert.Equal("production/azure/telephony/", key);
-        }
-
         [Fact]
         public async Task GetServiceConfigAsync_HandleNullResponse()
         {
