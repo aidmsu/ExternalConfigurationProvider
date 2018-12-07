@@ -13,7 +13,7 @@ namespace Sdl.Configuration
         /// <summary>
         /// Configure Consul configuration provider services.
         /// </summary>
-        public static IServiceCollection AddConsul(this IServiceCollection services, Action<ConsulConfig> configuration)
+        public static IServiceCollection AddConsulConfigurationProvider(this IServiceCollection services, Action<ConsulConfig> configuration)
         {
             var config = new ConsulConfig();
             configuration(config);

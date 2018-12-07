@@ -25,7 +25,7 @@ namespace Sdl.NetCoreServiceExample
             var consulToken = configuration.GetSection("Consul:token").Value;
 
             var serviceProvider = new ServiceCollection()
-                .AddConsul(options =>
+                .AddConsulConfigurationProvider(options =>
                 {
                     options.Url = consulUrl;
                     options.Token = consulToken;

@@ -15,9 +15,9 @@ namespace Sdl.ConfigurationTests
         [Theory]
         [InlineData("")]
         [InlineData(null)]
-        public void AddConsul_ThrowsException_WhenUrlIsNotSpecified(string url)
+        public void AddConsulConfigurationProvider_ThrowsException_WhenUrlIsNotSpecified(string url)
         {
-            var exception = Assert.Throws<ArgumentNullException>(() => _serviceCollection.Object.AddConsul(options => { options.Url = url; }));
+            var exception = Assert.Throws<ArgumentNullException>(() => _serviceCollection.Object.AddConsulConfigurationProvider(options => { options.Url = url; }));
 
             Assert.Equal("Url", exception.ParamName);
         }
@@ -25,9 +25,9 @@ namespace Sdl.ConfigurationTests
         [Theory]
         [InlineData("AnyRandomvalue")]
         [InlineData("/consul")]
-        public void AddConsul_ThrowsException_WhenUrlIsBad(string url)
+        public void AddConsulConfigurationProvider_ThrowsException_WhenUrlIsBad(string url)
         {
-            var exception = Assert.Throws<ArgumentException>(() => _serviceCollection.Object.AddConsul(options => { options.Url = url; }));
+            var exception = Assert.Throws<ArgumentException>(() => _serviceCollection.Object.AddConsulConfigurationProvider(options => { options.Url = url; }));
 
             Assert.Equal("Url", exception.ParamName);
         }
@@ -35,9 +35,9 @@ namespace Sdl.ConfigurationTests
         [Theory]
         [InlineData("")]
         [InlineData(null)]
-        public void AddConsul_ThrowsException_WhenEnvironmentIsNotSpecified(string environment)
+        public void AddConsulConfigurationProvider_ThrowsException_WhenEnvironmentIsNotSpecified(string environment)
         {
-            var exception = Assert.Throws<ArgumentNullException>(() => _serviceCollection.Object.AddConsul(options => { options.Environment = environment; }));
+            var exception = Assert.Throws<ArgumentNullException>(() => _serviceCollection.Object.AddConsulConfigurationProvider(options => { options.Environment = environment; }));
 
             Assert.Equal("Environment", exception.ParamName);
         }
