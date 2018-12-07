@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Consul;
 
@@ -89,18 +90,33 @@ namespace Sdl.Configuration
         /// Gets service settings from Consul and converts them to the specified .NET type.
         /// </summary>
         /// <param name="service">The service name.</param>
-        /// <param name="hosting">The hosting where the service is hosted. Optional.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="System.ArgumentNullException">Thrown when the service is not specified.</exception>
         /// <example>
         /// <code>
-        /// var settings = GetServiceConfigAsync&lt;ServiceSettings&gt;("Mango");
-        /// // or
-        /// var settings = GetServiceConfigAsync&lt;ServiceSettings&gt;("Telephony", "azure");
+        /// var settings = GetServiceConfigAsync&lt;RedisSettings&gt;("Redis");
         /// </code>
         /// </example>
-        public async Task<T> GetServiceConfigAsync<T>(string service, string hosting = null) where T : new()
+        public Task<T> GetServiceConfigAsync<T>(string service, CancellationToken cancellationToken = default(CancellationToken)) where T : new()
         {
-            var serviceDictionaryConfig = await GetServiceConfigAsync(service, hosting);
+            return GetServiceConfigAsync<T>(service, null, cancellationToken);
+        }
+
+        /// <summary>
+        /// Gets service settings from Consul and converts them to the specified .NET type.
+        /// </summary>
+        /// <param name="service">The service name.</param>
+        /// <param name="hosting">The hosting where the service is hosted. Optional.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <exception cref="System.ArgumentNullException">Thrown when the service is not specified.</exception>
+        /// <example>
+        /// <code>
+        /// var settings = GetServiceConfigAsync&lt;RedisSettings&gt;("Redis", "Azure");
+        /// </code>
+        /// </example>
+        public async Task<T> GetServiceConfigAsync<T>(string service, string hosting, CancellationToken cancellationToken = default(CancellationToken)) where T : new()
+        {
+            var serviceDictionaryConfig = await GetServiceConfigAsync(service, hosting, cancellationToken);
 
             var config = new T();
             var configType = config.GetType().GetTypeInfo();
@@ -124,16 +140,31 @@ namespace Sdl.Configuration
         /// Gets service settings from Consul.
         /// </summary>
         /// <param name="service">The service name.</param>
-        /// <param name="hosting">The hosting where the service is hosted. Optional.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <exception cref="System.ArgumentNullException">Thrown when the service is not specified.</exception>
         /// <example>
         /// <code>
-        /// var settings = GetServiceConfigAsync&lt;ServiceSettings&gt;("Mango");
-        /// // or
-        /// var settings = GetServiceConfigAsync&lt;ServiceSettings&gt;("Telephony", "azure");
+        /// var settings = GetServiceConfigAsync&lt;RedisSettings&gt;("Redis");
         /// </code>
         /// </example>
-        public async Task<Dictionary<string, string>> GetServiceConfigAsync(string service, string hosting = null)
+        public Task<Dictionary<string, string>> GetServiceConfigAsync(string service, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            return GetServiceConfigAsync(service, null, cancellationToken);
+        }
+
+        /// <summary>
+        /// Gets service settings from Consul.
+        /// </summary>
+        /// <param name="service">The service name.</param>
+        /// <param name="hosting">The hosting where the service is hosted. Optional.</param>
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <exception cref="System.ArgumentNullException">Thrown when the service is not specified.</exception>
+        /// <example>
+        /// <code>
+        /// var settings = GetServiceConfigAsync&lt;RedisSettings&gt;("Redis", "azure");
+        /// </code>
+        /// </example>
+        public async Task<Dictionary<string, string>> GetServiceConfigAsync(string service, string hosting, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (string.IsNullOrEmpty(service)) throw new ArgumentNullException(nameof(service));
 
@@ -141,18 +172,18 @@ namespace Sdl.Configuration
 
             if (_useCache && ServiceSettingsCache.ContainsKey(servicePrefix)) return ServiceSettingsCache[servicePrefix];
 
-            var settings = await GetServiceConfigAsyncFromConsul(servicePrefix);
+            var settings = await GetServiceConfigAsyncFromConsul(servicePrefix, cancellationToken);
 
             return _useCache
                 ? ServiceSettingsCache.GetOrAdd(servicePrefix, settings)
                 : settings;
         }
 
-        private async Task<Dictionary<string, string>> GetServiceConfigAsyncFromConsul(string servicePrefix)
+        private async Task<Dictionary<string, string>> GetServiceConfigAsyncFromConsul(string servicePrefix, CancellationToken cancellationToken)
         {
             using (var client = _consulClientFactory(_address, _token))
             {
-                var kvPairResult = await client.KV.List(servicePrefix);
+                var kvPairResult = await client.KV.List(servicePrefix, cancellationToken);
 
                 var response = kvPairResult.Response;
 
