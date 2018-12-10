@@ -127,7 +127,7 @@ namespace ExternalConfiguration
 
             if (_useCache && ServiceSettingsCache.ContainsKey(fullServiceName)) return ServiceSettingsCache[fullServiceName];
 
-            var settings = await _store.GetServiceConfigAsync(_environment, service, hosting, cancellationToken);
+            var settings = await _store.GetServiceConfigAsync(_environment, service, hosting, cancellationToken).ConfigureAwait(false);
 
             if (settings == null || !settings.Any()) return null;
 
