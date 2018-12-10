@@ -62,9 +62,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Configuration\Configuration.csproj">
+    <ProjectReference Include="..\..\src\ExternalConfiguration\ExternalConfiguration.csproj">
       <Project>{AD855A53-6408-452E-A2C3-26AAAFFF816D}</Project>
-      <Name>Configuration</Name>
+      <Name>ExternalConfiguration</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

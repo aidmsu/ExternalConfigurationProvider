@@ -1,5 +1,5 @@
 ﻿using System;
-using Configuration;
+using ExternalConfiguration;
 
 namespace Net45ServiceExample
 {

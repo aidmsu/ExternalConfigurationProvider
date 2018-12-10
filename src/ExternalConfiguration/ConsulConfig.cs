@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Configuration
+namespace ExternalConfiguration
 {
     /// <exclude />
     public class ConsulConfig : ProviderConfig

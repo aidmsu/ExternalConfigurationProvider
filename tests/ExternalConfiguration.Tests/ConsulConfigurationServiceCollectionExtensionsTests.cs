@@ -3,10 +3,10 @@ using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Moq;
-using Configuration;
+using ExternalConfiguration;
 using Xunit;
 
-namespace ConfigurationTests
+namespace ExternalConfiguration.Tests
 {
     public class ConsulConfigurationServiceCollectionExtensionsTests
     {

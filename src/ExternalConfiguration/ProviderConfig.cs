@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Configuration
+namespace ExternalConfiguration
 {
     /// <exclude />
     public abstract class ProviderConfig

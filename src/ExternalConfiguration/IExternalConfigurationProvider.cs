@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Configuration
+namespace ExternalConfiguration
 {
     /// <summary>
     /// Provides methods to get service settings from external configuration storage.

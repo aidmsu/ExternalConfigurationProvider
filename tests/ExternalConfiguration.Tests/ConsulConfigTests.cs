@@ -1,8 +1,8 @@
 ﻿using System;
-using Configuration;
+using ExternalConfiguration;
 using Xunit;
 
-namespace ConfigurationTests
+namespace ExternalConfiguration.Tests
 {
     public class ConsulConfigTests
     {

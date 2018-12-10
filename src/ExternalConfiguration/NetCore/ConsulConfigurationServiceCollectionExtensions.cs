@@ -5,7 +5,7 @@ using System.IO;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace Configuration
+namespace ExternalConfiguration
 {
     /// <exclude />
     public static class ConsulConfigurationServiceCollectionExtensions

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Configuration;
+using ExternalConfiguration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

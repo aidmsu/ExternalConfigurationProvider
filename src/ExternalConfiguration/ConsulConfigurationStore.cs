@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Consul;
 
-namespace Configuration
+namespace ExternalConfiguration
 {
     /// <summary>
     /// Provides methods to get service settings from Consul.
