@@ -13,12 +13,11 @@ namespace Net45ServiceExample
             var consulConfig = new ConsulConfig
             {
                 Url = consulUrl,
-                Token = consulToken,
-                Environment = "debug"
+                Token = consulToken
             };
 
             var store = new ConsulConfigurationStore(consulConfig.Url, consulConfig.Token);
-            var provider = new ExternalConfigurationProvider(store, consulConfig);
+            var provider = new ExternalConfigurationProvider(store, "debug");
 
             var mangoSettingsTask = provider.GetServiceSettingsAsync<MangoConfig>("mango");
 

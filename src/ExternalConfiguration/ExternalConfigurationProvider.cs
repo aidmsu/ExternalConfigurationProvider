@@ -24,7 +24,7 @@ namespace ExternalConfiguration
         /// Initializes a new instance of the ExternalConfigurationProvider class that gets services settings from external store.
         /// </summary>
         /// <param name="store">External store.</param>
-        /// <param name="config">Provider configuration.</param>
+        /// <param name="environment"> The environment where app runs.</param>
         /// <exception cref="System.ArgumentNullException">Thrown when the store is not specified.</exception>
         /// <exception cref="System.ArgumentNullException">Thrown when the options.Environment is not specified.</exception>
         /// <example>
@@ -32,13 +32,31 @@ namespace ExternalConfiguration
         /// var provider = new ExternalConfigurationProvider("http://localhost:8500", "b1gs33cr3t", "staging");
         /// </code>
         /// </example>
-        public ExternalConfigurationProvider(IExternalConfigurationStore store, ProviderConfig config)
+        public ExternalConfigurationProvider(IExternalConfigurationStore store, string environment)
+            : this(store, environment, useCache: true)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the ExternalConfigurationProvider class that gets services settings from external store.
+        /// </summary>
+        /// <param name="store">External store.</param>
+        /// <param name="environment"> The environment where app runs.</param>
+        /// <param name="useCache">If provider caches settings.</param>
+        /// <exception cref="System.ArgumentNullException">Thrown when the store is not specified.</exception>
+        /// <exception cref="System.ArgumentNullException">Thrown when the options.Environment is not specified.</exception>
+        /// <example>
+        /// <code>
+        /// var provider = new ExternalConfigurationProvider("http://localhost:8500", "b1gs33cr3t", "staging");
+        /// </code>
+        /// </example>
+        public ExternalConfigurationProvider(IExternalConfigurationStore store, string environment, bool useCache)
         {
             _store = store ?? throw new ArgumentNullException(nameof(store));
-            if (string.IsNullOrEmpty(config.Environment)) throw new ArgumentNullException(nameof(config.Environment));
+            if (string.IsNullOrEmpty(environment)) throw new ArgumentNullException(nameof(environment));
 
-            _useCache = config.UseCache;
-            _environment = config.Environment;
+            _environment = environment;
+            _useCache = useCache;
         }
 
         /// <summary>

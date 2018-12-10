@@ -21,8 +21,7 @@ namespace ExternalConfiguration.Tests
         {
             var exception = Assert.Throws<ArgumentNullException>(() => new ConsulConfigurationStore(new ConsulConfig
             {
-                Url = _correctUrl,
-                Environment = "dev"
+                Url = _correctUrl
             }, null));
 
             Assert.Equal("consulClientFactory", exception.ParamName);
@@ -109,9 +108,7 @@ namespace ExternalConfiguration.Tests
             var config = new ConsulConfig
             {
                 Url = url,
-                Token = token,
-                Environment = environment,
-                UseCache = useCache
+                Token = token
             };
 
             return new ConsulConfigurationStore(config, (address, t, timeout) => _mockConsulClient.Object);

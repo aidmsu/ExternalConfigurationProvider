@@ -16,24 +16,19 @@ namespace ExternalConfiguration.Tests
         [Fact]
         public void Ctor_ThrowsException_WhenStoreIsNull()
         {
-            var exception = Assert.Throws<ArgumentNullException>(() => new ExternalConfigurationProvider(null, new ConsulConfig
-            {
-                Url = _correctUrl,
-                Environment = "dev"
-            }));
+            var exception = Assert.Throws<ArgumentNullException>(() => new ExternalConfigurationProvider(null, "dev"));
 
             Assert.Equal("store", exception.ParamName);
         }
 
-        [Fact]
-        public void Ctor_ThrowsException_WhenConfigEnvironmentIsNull()
+        [Theory]
+        [InlineData("")]
+        [InlineData(null)]
+        public void Ctor_ThrowsException_WhenEnvironmentIsNotSpecified(string env)
         {
-            var exception = Assert.Throws<ArgumentNullException>(() => new ExternalConfigurationProvider(_mockStore.Object, new ConsulConfig
-            {
-                Url = _correctUrl
-            }));
+            var exception = Assert.Throws<ArgumentNullException>(() => new ExternalConfigurationProvider(_mockStore.Object, env));
 
-            Assert.Equal("Environment", exception.ParamName);
+            Assert.Equal("environment", exception.ParamName);
         }
 
         [Theory]
@@ -226,12 +221,10 @@ namespace ExternalConfiguration.Tests
             var config = new ConsulConfig
             {
                 Url = url,
-                Token = token,
-                Environment = environment,
-                UseCache = useCache
+                Token = token
             };
 
-            return new ExternalConfigurationProvider(_mockStore.Object, config);
+            return new ExternalConfigurationProvider(_mockStore.Object, environment, useCache);
         }
 
         private class MangoConfig

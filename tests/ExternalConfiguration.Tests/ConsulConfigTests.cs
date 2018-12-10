@@ -29,21 +29,5 @@ namespace ExternalConfiguration.Tests
 
             Assert.Equal("Url", exception.ParamName);
         }
-
-        [Fact]
-        public void Ctor_ThrowsException_WhenEnvironmentIsNull()
-        {
-            var exception = Assert.Throws<ArgumentNullException>(() => new ConsulConfig { Environment = null });
-
-            Assert.Equal("Environment", exception.ParamName);
-        }
-
-        [Fact]
-        public void Ctor_ThrowsException_WhenEnvironmentIsEmpty()
-        {
-            var exception = Assert.Throws<ArgumentNullException>(() => new ConsulConfig { Environment = string.Empty });
-
-            Assert.Equal("Environment", exception.ParamName);
-        }
     }
 }

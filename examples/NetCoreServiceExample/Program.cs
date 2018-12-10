@@ -24,12 +24,10 @@ namespace NetCoreServiceExample
             var consulToken = configuration.GetSection("Consul:token").Value;
 
             var serviceProvider = new ServiceCollection()
-                .AddConsulConfigurationProvider(options =>
+                .AddConsulConfigurationProvider("debug", consulConfig =>
                 {
-                    options.Url = consulUrl;
-                    options.Token = consulToken;
-                    options.Environment = "debug";
-                    options.UseCache = false;
+                    consulConfig.Url = consulUrl;
+                    consulConfig.Token = consulToken;
                 })
                 .BuildServiceProvider();
 

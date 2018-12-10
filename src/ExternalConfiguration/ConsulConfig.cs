@@ -3,7 +3,7 @@
 namespace ExternalConfiguration
 {
     /// <exclude />
-    public class ConsulConfig : ProviderConfig
+    public class ConsulConfig
     {
         private string _url;
 
@@ -29,8 +29,6 @@ namespace ExternalConfiguration
         /// The Consul authentication token.
         /// </summary>
         public string Token { get; set; }
-
-        
 
         /// <summary>
         /// The timespan to wait before the config request times out.

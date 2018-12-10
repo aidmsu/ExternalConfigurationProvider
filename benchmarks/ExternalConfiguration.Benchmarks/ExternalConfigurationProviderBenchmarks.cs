@@ -13,11 +13,7 @@ namespace ExternalConfiguration.Benchmarks
         public void SetUp()
         {
             var store = new Mock<IExternalConfigurationStore>().Object;
-            _provider = new ExternalConfigurationProvider(store, new ConsulConfig
-            {
-                Environment = "staging",
-                UseCache = true
-            });
+            _provider = new ExternalConfigurationProvider(store, "staging", useCache: true);
 
             _provider.ServiceSettingsCache["staging/redis/"] = new Dictionary<string, string>{{"key1", "value1"}};
         }
