@@ -6,8 +6,15 @@
     <DebugType>full</DebugType>
 
     <PackageId>ExternalConfigurationProvider</PackageId>
+    <Authors>Andrey Dorokhov</Authors>
     <Owners>aidmsu</Owners>
-    <Description>A .NET library for getting configurations from single place.</Description>
+    <Description>A .NET library for getting configurations from external configuration store.</Description>
+    <PackageProjectUrl>https://github.com/aidmsu/ExternalConfigurationProvider</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.github.com/aidmsu/ExternalConfigurationProvider/master/LICENSE</PackageLicenseUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>https://github.com/aidmsu/ExternalConfigurationProvider/releases</PackageReleaseNotes>
+    <Copyright>Copyright © 2018 Andrey Dorokhov.</Copyright>
+    <PackageTags>External Config Configuration Consul</PackageTags>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
