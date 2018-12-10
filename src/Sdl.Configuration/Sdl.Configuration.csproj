@@ -6,7 +6,7 @@
     <DebugType>full</DebugType>
 
     <PackageId>Sdl.Configuration</PackageId>
-    <Owners>dorohov</Owners>
+    <Owners>aidmsu</Owners>
     <Description>A .NET library for getting configurations from single place.</Description>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
