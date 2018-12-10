@@ -1,5 +1,6 @@
 # ExternalConfigurationProvider
 
+[![NuGet](https://img.shields.io/nuget/v/ExternalConfigurationProvider.svg)](https://www.nuget.org/packages/ExternalConfigurationProvider)
 [![AppVeyor](https://img.shields.io/appveyor/ci/aidmsu/ExternalConfigurationProvider/master.svg?label=appveyor)](https://ci.appveyor.com/project/aidmsu/ExternalConfigurationProvider/branch/master)
 [![Codecov branch](https://img.shields.io/codecov/c/github/aidmsu/ExternalConfigurationProvider/master.svg)](https://codecov.io/gh/aidmsu/ExternalConfigurationProvider)
 
