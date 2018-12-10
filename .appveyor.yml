@@ -19,7 +19,7 @@ artifacts:
   - path: 'build\*.nupkg'
   - path: 'build\*.zip'
 
-  deploy:
+deploy:
   - provider: GitHub
     auth_token:
       secure: mhJRUyZyLfqKcymJOWMYcguK/chCrpQR7atxfUaw7L6TjTmPDb46p77AbTKx+bbx
