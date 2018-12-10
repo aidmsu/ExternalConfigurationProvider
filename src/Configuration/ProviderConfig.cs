@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Sdl.Configuration
+namespace Configuration
 {
     /// <exclude />
     public abstract class ProviderConfig

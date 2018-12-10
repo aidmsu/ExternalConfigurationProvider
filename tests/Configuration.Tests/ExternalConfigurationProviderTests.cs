@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Sdl.Configuration;
+using Configuration;
 using Xunit;
 using Moq;
 
-namespace Sdl.ConfigurationTests
+namespace ConfigurationTests
 {
     public class ExternalConfigurationProviderTests
     {

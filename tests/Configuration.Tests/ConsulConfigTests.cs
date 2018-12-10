@@ -1,8 +1,8 @@
 ﻿using System;
-using Sdl.Configuration;
+using Configuration;
 using Xunit;
 
-namespace Sdl.ConfigurationTests
+namespace ConfigurationTests
 {
     public class ConsulConfigTests
     {

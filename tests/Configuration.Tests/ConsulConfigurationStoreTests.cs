@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Consul;
-using Sdl.Configuration;
+using Configuration;
 using Xunit;
 using Moq;
 
-namespace Sdl.Configuration.Tests
+namespace Configuration.Tests
 {
     public class ConsulConfigurationStoreTests
     {

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Sdl.Configuration;
+using Configuration;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Sdl.NetCoreServiceExample
+namespace NetCoreServiceExample
 {
     class Program
     {

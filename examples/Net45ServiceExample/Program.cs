@@ -1,7 +1,7 @@
 ﻿using System;
-using Sdl.Configuration;
+using Configuration;
 
-namespace Sdl.Net45ServiceExample
+namespace Net45ServiceExample
 {
     class Program
     {

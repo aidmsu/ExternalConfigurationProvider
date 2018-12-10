@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Sdl.Configuration\Sdl.Configuration.csproj" />
+    <ProjectReference Include="..\..\src\Configuration\Configuration.csproj" />
   </ItemGroup>
 
 </Project>

@@ -6,7 +6,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Sdl.Configuration
+namespace Configuration
 {
     /// <summary>
     /// Provides methods to get service settings from external configuration store.

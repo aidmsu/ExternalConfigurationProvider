@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{27F34BBE-C590-407F-B675-542478BD2B26}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Sdl.Net45ServiceExample</RootNamespace>
-    <AssemblyName>Sdl.Net45ServiceExample</AssemblyName>
+    <RootNamespace>Net45ServiceExample</RootNamespace>
+    <AssemblyName>Net45ServiceExample</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -62,9 +62,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Sdl.Configuration\Sdl.Configuration.csproj">
+    <ProjectReference Include="..\..\src\Configuration\Configuration.csproj">
       <Project>{AD855A53-6408-452E-A2C3-26AAAFFF816D}</Project>
-      <Name>Sdl.Configuration</Name>
+      <Name>Configuration</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
