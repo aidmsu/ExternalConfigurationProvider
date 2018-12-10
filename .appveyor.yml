@@ -18,3 +18,18 @@ build_script:
 artifacts:
   - path: 'build\*.nupkg'
   - path: 'build\*.zip'
+
+  deploy:
+  - provider: GitHub
+    auth_token:
+      secure: mhJRUyZyLfqKcymJOWMYcguK/chCrpQR7atxfUaw7L6TjTmPDb46p77AbTKx+bbx
+    artifact: /.*\.zip/
+    draft: true
+    on:
+      appveyor_repo_tag: true
+      
+  - provider: NuGet
+    api_key: 
+      secure: A5L6vpFGQ9U6ZgyS49BvfcIHvFHcIpaSu84wdwWNCW8dwTX7HnKA+u0wBfwdB+YD
+    on:
+      appveyor_repo_tag: true
