@@ -45,12 +45,12 @@ Task("Build")
     var buildSettings =  new DotNetCoreBuildSettings { Configuration = configuration };
     if(!string.IsNullOrEmpty(version)) buildSettings.ArgumentCustomization = args => args.Append("/p:Version=" + version);
 
-    DotNetCoreBuild("src/Configuration/Configuration.csproj", buildSettings);
+    DotNetCoreBuild("src/ExternalConfiguration/ExternalConfiguration.csproj", buildSettings);
 });
 
 Task("Test").IsDependentOn("Build").Does(() =>
 {
-    DotNetCoreTest("./tests/Configuration.Tests/Configuration.Tests.csproj", new DotNetCoreTestSettings
+    DotNetCoreTest("./tests/ExternalConfiguration.Tests/ExternalConfiguration.Tests.csproj", new DotNetCoreTestSettings
     {
         Configuration = configuration,
         ArgumentCustomization = args => args.Append("/p:BuildProjectReferences=false")
@@ -60,11 +60,11 @@ Task("Test").IsDependentOn("Build").Does(() =>
 Task("TestCoverage").IsDependentOn("Test").Does(() => 
 {
     OpenCover(
-        tool => { tool.XUnit2("tests/Configuration.Tests/bin/" + configuration + "/**/Configuration.Tests.dll", new XUnit2Settings { ShadowCopy = false }); },
+        tool => { tool.XUnit2("tests/ExternalConfiguration.Tests/bin/" + configuration + "/**/ExternalConfiguration.Tests.dll", new XUnit2Settings { ShadowCopy = false }); },
         new FilePath("coverage.xml"),
         new OpenCoverSettings()
-            .WithFilter("+[Configuration]*")
-            .WithFilter("-[Configuration.Tests]*"));
+            .WithFilter("+[ExternalConfiguration]*")
+            .WithFilter("-[ExternalConfiguration.Tests]*"));
 });
 
 Task("Upload-Coverage")
@@ -79,8 +79,8 @@ Task("Pack").IsDependentOn("Upload-Coverage").Does(()=>
 {
     CreateDirectory("build");
     
-    CopyFiles(GetFiles("./src/Configuration/bin/**/*.nupkg"), "build");
-    Zip("./src/Configuration/bin/" + configuration, "build/Configuration-" + version +".zip");
+    CopyFiles(GetFiles("./src/ExternalConfiguration/bin/**/*.nupkg"), "build");
+    Zip("./src/ExternalConfiguration/bin/" + configuration, "build/ExternalConfigurationPovider-" + version +".zip");
 });
 
 RunTarget(target);
