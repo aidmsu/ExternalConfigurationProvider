@@ -25,6 +25,17 @@ namespace ExternalConfiguration.Tests
             Assert.Equal("store", exception.ParamName);
         }
 
+        [Fact]
+        public void Ctor_ThrowsException_WhenConfigEnvironmentIsNull()
+        {
+            var exception = Assert.Throws<ArgumentNullException>(() => new ExternalConfigurationProvider(_mockStore.Object, new ConsulConfig
+            {
+                Url = _correctUrl
+            }));
+
+            Assert.Equal("Environment", exception.ParamName);
+        }
+
         [Theory]
         [InlineData("")]
         [InlineData(null)]

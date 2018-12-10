@@ -35,6 +35,7 @@ namespace ExternalConfiguration
         public ExternalConfigurationProvider(IExternalConfigurationStore store, ProviderConfig config)
         {
             _store = store ?? throw new ArgumentNullException(nameof(store));
+            if (string.IsNullOrEmpty(config.Environment)) throw new ArgumentNullException(nameof(config.Environment));
 
             _useCache = config.UseCache;
             _environment = config.Environment;
