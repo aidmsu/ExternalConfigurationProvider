@@ -15,6 +15,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetCoreServiceExample", "ex
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net45ServiceExample", "examples\Net45ServiceExample\Net45ServiceExample.csproj", "{27F34BBE-C590-407F-B675-542478BD2B26}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarks", "benchmarks", "{E40B9298-0F49-4B4C-8242-A2911F29693C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExternalConfiguration.Benchmarks", "benchmarks\ExternalConfiguration.Benchmarks\ExternalConfiguration.Benchmarks.csproj", "{DC85C980-0AFF-4E1A-B013-B5695A4F89EA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +41,10 @@ Global
 		{27F34BBE-C590-407F-B675-542478BD2B26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27F34BBE-C590-407F-B675-542478BD2B26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27F34BBE-C590-407F-B675-542478BD2B26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC85C980-0AFF-4E1A-B013-B5695A4F89EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC85C980-0AFF-4E1A-B013-B5695A4F89EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC85C980-0AFF-4E1A-B013-B5695A4F89EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC85C980-0AFF-4E1A-B013-B5695A4F89EA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -45,6 +53,7 @@ Global
 		{14C62554-FB97-41C5-8BAA-77ABA23E707D} = {9D606222-D4E4-4BCC-A9DB-284A8B492B34}
 		{AD9D577E-1244-4613-8A60-1077056BE309} = {53F9A03A-1171-4450-A8A1-C6836B5082D8}
 		{27F34BBE-C590-407F-B675-542478BD2B26} = {53F9A03A-1171-4450-A8A1-C6836B5082D8}
+		{DC85C980-0AFF-4E1A-B013-B5695A4F89EA} = {E40B9298-0F49-4B4C-8242-A2911F29693C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {934472FC-6D2E-48ED-98CF-64C6D947F249}
