@@ -37,7 +37,7 @@ namespace NetCoreServiceExample
 
             var mangoKey = configuration.GetSection("Consul:MangoKey").Value;
 
-            var mangoConfig = await _configurationProvider.GetServiceConfigAsync(mangoKey);
+            var mangoConfig = await _configurationProvider.GetServiceSettingsAsync(mangoKey);
 
             LogConfig(mangoConfig, "mango");
 

@@ -20,7 +20,7 @@ namespace Net45ServiceExample
             var store = new ConsulConfigurationStore(consulConfig.Url, consulConfig.Token);
             var provider = new ExternalConfigurationProvider(store, consulConfig);
 
-            var mangoSettingsTask = provider.GetServiceConfigAsync<MangoConfig>("mango");
+            var mangoSettingsTask = provider.GetServiceSettingsAsync<MangoConfig>("mango");
 
             var mangoSettings = mangoSettingsTask.Result;
 

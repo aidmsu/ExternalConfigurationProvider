@@ -23,9 +23,9 @@ namespace ExternalConfiguration.Benchmarks
         }
 
         [Benchmark]
-        public Task<Dictionary<string, string>> GetServiceConfigAsyncFromCache()
+        public Task<Dictionary<string, string>> GetServiceSettingsAsyncFromCache()
         {
-            return _provider.GetServiceConfigAsync("redis");
+            return _provider.GetServiceSettingsAsync("redis");
         }
     }
 }

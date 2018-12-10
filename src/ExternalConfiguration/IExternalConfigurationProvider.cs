@@ -17,10 +17,10 @@ namespace ExternalConfiguration
         /// <exception cref="System.ArgumentNullException">Thrown when the service is not specified.</exception>
         /// <example>
         /// <code>
-        /// var settings = GetServiceConfigAsync&lt;RedisSettings&gt;("Redis");
+        /// var settings = GetServiceSettingsAsync&lt;RedisSettings&gt;("Redis");
         /// </code>
         /// </example>
-        Task<T> GetServiceConfigAsync<T>(string service, CancellationToken cancellationToken = default(CancellationToken)) where T : new();
+        Task<T> GetServiceSettingsAsync<T>(string service, CancellationToken cancellationToken = default(CancellationToken)) where T : new();
 
         /// <summary>
         /// Gets service settings from external store and converts them to the specified .NET type.
@@ -31,10 +31,10 @@ namespace ExternalConfiguration
         /// <exception cref="System.ArgumentNullException">Thrown when the service is not specified.</exception>
         /// <example>
         /// <code>
-        /// var settings = GetServiceConfigAsync&lt;RedisSettings&gt;("Redis", "Azure");
+        /// var settings = GetServiceSettingsAsync&lt;RedisSettings&gt;("Redis", "Azure");
         /// </code>
         /// </example>
-        Task<T> GetServiceConfigAsync<T>(string service, string hosting, CancellationToken cancellationToken = default(CancellationToken)) where T : new();
+        Task<T> GetServiceSettingsAsync<T>(string service, string hosting, CancellationToken cancellationToken = default(CancellationToken)) where T : new();
 
         /// <summary>
         /// Gets service settings from external store.
@@ -44,10 +44,10 @@ namespace ExternalConfiguration
         /// <exception cref="System.ArgumentNullException">Thrown when the service is not specified.</exception>
         /// <example>
         /// <code>
-        /// var settings = GetServiceConfigAsync&lt;RedisSettings&gt;("Redis");
+        /// var settings = GetServiceSettingsAsync&lt;RedisSettings&gt;("Redis");
         /// </code>
         /// </example>
-        Task<Dictionary<string, string>> GetServiceConfigAsync(string service, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Dictionary<string, string>> GetServiceSettingsAsync(string service, CancellationToken cancellationToken = default(CancellationToken));
 
 
         /// <summary>
@@ -59,9 +59,9 @@ namespace ExternalConfiguration
         /// <exception cref="System.ArgumentNullException">Thrown when the service is not specified.</exception>
         /// <example>
         /// <code>
-        /// var settings = GetServiceConfigAsync&lt;RedisSettings&gt;("Redis", "Azure");
+        /// var settings = GetServiceSettingsAsync&lt;RedisSettings&gt;("Redis", "Azure");
         /// </code>
         /// </example>
-        Task<Dictionary<string, string>> GetServiceConfigAsync(string service, string hosting, CancellationToken cancellationToken = default(CancellationToken));
+        Task<Dictionary<string, string>> GetServiceSettingsAsync(string service, string hosting, CancellationToken cancellationToken = default(CancellationToken));
     }
 }

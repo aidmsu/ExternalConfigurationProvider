@@ -39,11 +39,11 @@ namespace ExternalConfiguration.Tests
         [Theory]
         [InlineData("")]
         [InlineData(null)]
-        public void GetServiceConfigAsync_ThrowsException_WhenServiceIsNotSpecified(string service)
+        public void GetServiceSettingsAsync_ThrowsException_WhenServiceIsNotSpecified(string service)
         {
             var provider = CreateProvider(_correctUrl, "token", "dev", true);
 
-            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => provider.GetServiceConfigAsync(service, "hosting"));
+            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => provider.GetServiceSettingsAsync(service, "hosting"));
 
             Assert.Equal("service", exception.Result.ParamName);
         }
@@ -67,37 +67,37 @@ namespace ExternalConfiguration.Tests
         }
 
         [Fact]
-        public async Task GetServiceConfigAsync_HandleNullResponse()
+        public async Task GetServiceSettingsAsync_HandleNullResponse()
         {
             StoreShouldReturn(null);
 
             var provider = CreateProvider(_correctUrl, "token", "debug", false);
 
-            var config = await provider.GetServiceConfigAsync("mango");
+            var config = await provider.GetServiceSettingsAsync("mango");
 
             Assert.Null(config);
         }
 
         [Fact]
-        public async Task GetServiceConfigAsync_HandleEmpty()
+        public async Task GetServiceSettingsAsync_HandleEmpty()
         { 
             StoreShouldReturn(new Dictionary<string, string>());
 
             var provider = CreateProvider(_correctUrl, "token", "debug", false);
 
-            var config = await provider.GetServiceConfigAsync("mango");
+            var config = await provider.GetServiceSettingsAsync("mango");
 
             Assert.Null(config);
         }
 
         [Fact]
-        public async Task GetServiceConfigAsync_ReturnTheSameAsStore()
+        public async Task GetServiceSettingsAsync_ReturnTheSameAsStore()
         {
             StoreShouldReturn(new Dictionary<string, string> { { "key1", "value1" } });
 
             var provider = CreateProvider(_correctUrl, "token", "debug", false);
 
-            var config = await provider.GetServiceConfigAsync("mango");
+            var config = await provider.GetServiceSettingsAsync("mango");
 
             Assert.NotNull(config);
             Assert.Single(config);
@@ -105,14 +105,14 @@ namespace ExternalConfiguration.Tests
         }
 
         [Fact]
-        public async Task GetServiceConfigAsync_UseCache_WhenSettingsIsAlreadyInCache()
+        public async Task GetServiceSettingsAsync_UseCache_WhenSettingsIsAlreadyInCache()
         {
             var provider = CreateProvider(_correctUrl, "token", "debug", true);
 
             provider.ServiceSettingsCache["debug/mango/"] = new Dictionary<string, string> {{"key1", "cachedValue"}};
             StoreShouldReturn(new Dictionary<string, string> { { "key1", "consulValue" } });
 
-            var config = await provider.GetServiceConfigAsync("mango");
+            var config = await provider.GetServiceSettingsAsync("mango");
 
             Assert.NotNull(config);
             Assert.Single(config);
@@ -120,14 +120,14 @@ namespace ExternalConfiguration.Tests
         }
 
         [Fact]
-        public async Task GetServiceConfigAsync_IgnoreCache_WhenUseCacheIsFalse()
+        public async Task GetServiceSettingsAsync_IgnoreCache_WhenUseCacheIsFalse()
         {
             var provider = CreateProvider(_correctUrl, "token", "debug", false);
 
             provider.ServiceSettingsCache["debug/mango/"] = new Dictionary<string, string> { { "key1", "cachedValue" } };
             StoreShouldReturn(new Dictionary<string, string> { { "key1", "consulValue" } });
 
-            var config = await provider.GetServiceConfigAsync("mango");
+            var config = await provider.GetServiceSettingsAsync("mango");
 
             Assert.NotNull(config);
             Assert.Single(config);
@@ -135,14 +135,14 @@ namespace ExternalConfiguration.Tests
         }
 
         [Fact]
-        public async Task GetServiceConfigAsync_GetsSettingsFromConsul_WhenUseCacheIsTrueButCacheDoesntContainValue()
+        public async Task GetServiceSettingsAsync_GetsSettingsFromConsul_WhenUseCacheIsTrueButCacheDoesntContainValue()
         {
             var provider = CreateProvider(_correctUrl, "token", "debug", true);
 
             provider.ServiceSettingsCache["debug/mango1/"] = new Dictionary<string, string> { { "key1", "cachedValue" } };
             StoreShouldReturn(new Dictionary<string, string> { { "key1", "consulValue" } });
 
-            var config = await provider.GetServiceConfigAsync("mango");
+            var config = await provider.GetServiceSettingsAsync("mango");
 
             Assert.NotNull(config);
             Assert.Single(config);
@@ -152,17 +152,17 @@ namespace ExternalConfiguration.Tests
         [Theory]
         [InlineData("")]
         [InlineData(null)]
-        public void GetServiceConfigAsyncT_ThrowsException_WhenServiceIsNotSpecified(string service)
+        public void GetServiceSettingsAsyncT_ThrowsException_WhenServiceIsNotSpecified(string service)
         {
             var provider = CreateProvider(_correctUrl, "token", "dev", true);
 
-            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => provider.GetServiceConfigAsync<MangoConfig>(service, "hosting"));
+            var exception = Assert.ThrowsAsync<ArgumentNullException>(() => provider.GetServiceSettingsAsync<MangoConfig>(service, "hosting"));
 
             Assert.Equal("service", exception.Result.ParamName);
         }
 
         [Fact]
-        public async Task GetServiceConfigAsyncT_ConvertConsulResponseToSettingsObject()
+        public async Task GetServiceSettingsAsyncT_ConvertConsulResponseToSettingsObject()
         {
             StoreShouldReturn(new Dictionary<string, string>
             {
@@ -172,7 +172,7 @@ namespace ExternalConfiguration.Tests
 
             var provider = CreateProvider(_correctUrl, "token", "debug", false);
 
-            var config = await provider.GetServiceConfigAsync<MangoConfig>("mango");
+            var config = await provider.GetServiceSettingsAsync<MangoConfig>("mango");
 
             Assert.NotNull(config);
             Assert.Equal("secretKey", config.ApiKey);
@@ -180,7 +180,7 @@ namespace ExternalConfiguration.Tests
         }
 
         [Fact]
-        public async Task GetServiceConfigAsyncT_IsNotCaseSensitive()
+        public async Task GetServiceSettingsAsyncT_IsNotCaseSensitive()
         {
             StoreShouldReturn(new Dictionary<string, string>
             {
@@ -190,7 +190,7 @@ namespace ExternalConfiguration.Tests
 
             var provider = CreateProvider(_correctUrl, "token", "debug", false);
 
-            var config = await provider.GetServiceConfigAsync<MangoConfig>("mango");
+            var config = await provider.GetServiceSettingsAsync<MangoConfig>("mango");
 
             Assert.NotNull(config);
             Assert.Equal("secretKey", config.ApiKey);
@@ -198,7 +198,7 @@ namespace ExternalConfiguration.Tests
         }
 
         [Fact]
-        public async Task GetServiceConfigAsyncT_ReturnsCorrectObject_WhenTHasPropertiesDifferingOnlyCase()
+        public async Task GetServiceSettingsAsyncT_ReturnsCorrectObject_WhenTHasPropertiesDifferingOnlyCase()
         {
             StoreShouldReturn(new Dictionary<string, string>
             {
@@ -208,7 +208,7 @@ namespace ExternalConfiguration.Tests
 
             var provider = CreateProvider(_correctUrl, "token", "debug", false);
 
-            var config = await provider.GetServiceConfigAsync<MangoConfigWithPropertiesDifferingOnlyCase>("mango");
+            var config = await provider.GetServiceSettingsAsync<MangoConfigWithPropertiesDifferingOnlyCase>("mango");
 
             Assert.NotNull(config);
             Assert.Equal("secretKey", config.ApiKey);

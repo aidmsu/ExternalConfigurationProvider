@@ -19,7 +19,7 @@ namespace ExternalConfiguration
         /// <exception cref="System.ArgumentNullException">Thrown when the service is not specified.</exception>
         /// <example>
         /// <code>
-        /// var settings = GetServiceConfigAsync&lt;RedisSettings&gt;("Redis", "Azure");
+        /// var settings = GetServiceSettingsAsync&lt;RedisSettings&gt;("Redis", "Azure");
         /// </code>
         /// </example>
         Task<Dictionary<string, string>> GetServiceConfigAsync(string environment, string hosting, string service, CancellationToken cancellationToken = default(CancellationToken));
