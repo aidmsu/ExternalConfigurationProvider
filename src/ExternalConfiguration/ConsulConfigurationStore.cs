@@ -103,7 +103,7 @@ namespace ExternalConfiguration
 
             using(var client = _consulClientFactory(_address, _token, _timeout))
             {
-                var kvPairResult = await client.KV.List(servicePrefix, cancellationToken);
+                var kvPairResult = await client.KV.List(servicePrefix, cancellationToken).ConfigureAwait(false);
 
                 var response = kvPairResult.Response;
 
