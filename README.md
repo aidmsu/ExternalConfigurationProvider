@@ -61,7 +61,7 @@ public class Repository
 
 	public Repository(IExternalConfigurationProvider externalConfigurationProvider)
 	{
-		var redisConfig = externalConfigurationProvider.GetServiceConfigAsync("redis");
+		var redisConfig = externalConfigurationProvider.GetServiceSettingsAsync("redis").Result;
 		_redisClient = new RedisClient(redisConfig["url"], redisConfig["password"]); 
 		// http://localhost:6379 StrongPassword
 	}
@@ -71,7 +71,7 @@ public class Repository
 In case of `hosting` is specified:
 
 ```csharp
-var redisConfig = externalConfigurationProvider.GetServiceConfigAsync("redis", "azure");
+var redisConfig = externalConfigurationProvider.GetServiceSettingsAsync("redis", "azure");
 var redisClient = new RedisClient(redisConfig["url"], redisConfig["password"]); 
 // http://azure.com/redis SuperStrongPassword
 ```
