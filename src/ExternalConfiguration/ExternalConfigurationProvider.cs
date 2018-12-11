@@ -13,7 +13,6 @@ namespace ExternalConfiguration
     /// </summary>
     public class ExternalConfigurationProvider : IExternalConfigurationProvider
     {
-        private readonly string _environment;
         private readonly bool _useCache;
 
         private readonly IExternalConfigurationStore _store;
@@ -24,7 +23,7 @@ namespace ExternalConfiguration
         /// Initializes a new instance of the ExternalConfigurationProvider class that gets services settings from external store.
         /// </summary>
         /// <param name="store">External store.</param>
-        /// <param name="environment"> The environment where app runs.</param>
+        /// <param name="environment">The environment where app runs.</param>
         /// <exception cref="System.ArgumentNullException">Thrown when the store is not specified.</exception>
         /// <exception cref="System.ArgumentNullException">Thrown when the options.Environment is not specified.</exception>
         /// <example>
@@ -41,7 +40,7 @@ namespace ExternalConfiguration
         /// Initializes a new instance of the ExternalConfigurationProvider class that gets services settings from external store.
         /// </summary>
         /// <param name="store">External store.</param>
-        /// <param name="environment"> The environment where app runs.</param>
+        /// <param name="environment">The environment where app runs.</param>
         /// <param name="useCache">If provider caches settings.</param>
         /// <exception cref="System.ArgumentNullException">Thrown when the store is not specified.</exception>
         /// <exception cref="System.ArgumentNullException">Thrown when the options.Environment is not specified.</exception>
@@ -55,9 +54,14 @@ namespace ExternalConfiguration
             _store = store ?? throw new ArgumentNullException(nameof(store));
             if (string.IsNullOrEmpty(environment)) throw new ArgumentNullException(nameof(environment));
 
-            _environment = environment;
+            Environment = environment;
             _useCache = useCache;
         }
+
+        /// <summary>
+        /// The environment where app runs.
+        /// </summary>
+        public string Environment { get; private set; }
 
         /// <summary>
         /// Gets service settings from external store and converts them to the specified .NET type.
@@ -141,11 +145,11 @@ namespace ExternalConfiguration
         {
             if (string.IsNullOrEmpty(service)) throw new ArgumentNullException(nameof(service));
 
-            var fullServiceName = GetFullServiceName(_environment, service, hosting);
+            var fullServiceName = GetFullServiceName(Environment, service, hosting);
 
             if (_useCache && ServiceSettingsCache.ContainsKey(fullServiceName)) return ServiceSettingsCache[fullServiceName];
 
-            var settings = await _store.GetServiceConfigAsync(_environment, service, hosting, cancellationToken).ConfigureAwait(false);
+            var settings = await _store.GetServiceConfigAsync(Environment, service, hosting, cancellationToken).ConfigureAwait(false);
 
             if (settings == null || !settings.Any()) return null;
 

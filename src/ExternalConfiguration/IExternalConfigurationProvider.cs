@@ -9,6 +9,7 @@ namespace ExternalConfiguration
     /// </summary>
     public interface IExternalConfigurationProvider
     {
+        string Environment { get; }
         /// <summary>
         /// Gets service settings from external storage and converts them to the specified .NET type.
         /// </summary>
