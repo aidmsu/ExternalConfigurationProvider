@@ -32,6 +32,17 @@ namespace ExternalConfiguration.Tests
         }
 
         [Theory]
+        [InlineData("debug")]
+        [InlineData("dev")]
+        [InlineData("staging")]
+        public void Ctor_SetsEnvironment(string environment)
+        {
+            var configurationProvider = new ExternalConfigurationProvider(_mockStore.Object, environment);
+
+            Assert.Equal(environment, configurationProvider.Environment);
+        }
+
+        [Theory]
         [InlineData("")]
         [InlineData(null)]
         public void GetServiceSettingsAsync_ThrowsException_WhenServiceIsNotSpecified(string service)
