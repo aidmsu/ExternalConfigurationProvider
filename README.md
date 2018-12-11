@@ -15,40 +15,62 @@ ExternalConfigurationProvider is a .NET library for getting services configs fro
 
 * Consul
 
-## Use case
-
-TODO
+## Use cases
+ 
+* Store sensitive data (passwords, connection strings) in external store instead of VCS. 
+* Store all settings in one centralized store. When you change settings of a service you don't need to update config files of all applications which use the service. You just update config in external configuration store.
 
 ## Usage
 
-### .NET Core
+### Consul with .NET Core
 
-So, you have external configuration store (e.g. Consul) which stores configs of all services.
+Install and run Consul following [guide](https://www.consul.io/docs/install/index.html).
 
-Keys must be in the formats:
+Add to Consul KV values:
 
 ```
-{environment}/{hosting}/{service}/{settings}
-or
-{environment}/{service}/{settings}
+dev/redis/url http://localhost:6379
+dev/redis/password StrongPassword
 
-Example:
-staging/azure/redis/url
+staging/azure/redis/url http://azure.com/redis
+staging/azure/redis/password SuperStrongPassword
 ```
 
-Next, you need to get service settings in apps:
+Register Consul configuration provider service in DI:
 
 ```csharp
-using Sdl.Configuration;
+using ExternalConfiguration;
 
-// Register Consul configuration provider service in DI.
+// Getting current environment.
+// In our exmaple: dev or staging.
+var env = ... ;
+
 serviceCollection.AddConsulConfigurationProvider(config =>
 {
     config.Url = "http://localhost:8500";
-    config.Environment = "Debug";
+    config.Environment = env;
 });	
-
-// Getting settings.
-var redisConfig = consulConfigurationProvider.GetServiceConfigAsync("Redis");
-var redisClient = new RedisClient(redisConfig["url"]);
 ```
+
+Use `IExternalConfigurationProvider` to get settings in `dev` environment:
+
+```csharp
+public class Repository
+{
+	private IRedisClient _redisClient;
+
+	public Repository(IExternalConfigurationProvider externalConfigurationProvider)
+	{
+		var redisConfig = externalConfigurationProvider.GetServiceConfigAsync("redis");
+		_redisClient = new RedisClient(redisConfig["url"], redisConfig["password"]); // http://localhost:6379 StrongPassword
+	}
+}
+```
+
+In case of `hosting` is specified:
+
+```csharp
+var redisConfig = externalConfigurationProvider.GetServiceConfigAsync("redis", "azure");
+var redisClient = new RedisClient(redisConfig["url"], redisConfig["password"]); // http://azure.com/redis SuperStrongPassword
+```
+
