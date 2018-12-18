@@ -168,6 +168,18 @@ namespace ExternalConfiguration.Tests
         }
 
         [Fact]
+        public async Task GetServiceSettingsAsyncT_ReturnNullIfKeyIsNotFound()
+        {
+            StoreShouldReturn(new Dictionary<string, string>());
+
+            var provider = CreateProvider(_correctUrl, "token", "debug", false);
+
+            var config = await provider.GetServiceSettingsAsync<MangoConfig>("mango");
+
+            Assert.Null(config);
+        }
+
+        [Fact]
         public async Task GetServiceSettingsAsyncT_ConvertConsulResponseToSettingsObject()
         {
             StoreShouldReturn(new Dictionary<string, string>

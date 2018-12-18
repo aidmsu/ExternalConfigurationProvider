@@ -95,6 +95,8 @@ namespace ExternalConfiguration
         {
             var serviceDictionaryConfig = await GetServiceSettingsAsync(service, hosting, cancellationToken);
 
+            if (serviceDictionaryConfig == null) return default(T);
+
             var config = new T();
             var configType = config.GetType().GetTypeInfo();
 
