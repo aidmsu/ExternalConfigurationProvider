@@ -93,7 +93,7 @@ namespace ExternalConfiguration
         /// </example>
         public async Task<T> GetServiceSettingsAsync<T>(string service, string hosting, CancellationToken cancellationToken = default(CancellationToken)) where T : new()
         {
-            var serviceDictionaryConfig = await GetServiceSettingsAsync(service, hosting, cancellationToken);
+            var serviceDictionaryConfig = await GetServiceSettingsAsync(service, hosting, cancellationToken).ConfigureAwait(false);
 
             if (serviceDictionaryConfig == null) return default(T);
 
