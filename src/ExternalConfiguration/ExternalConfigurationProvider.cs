@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Jil;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -109,7 +112,11 @@ namespace ExternalConfiguration
                     properties.FirstOrDefault(p => p.Name.Equals(item.Key, StringComparison.Ordinal)) ??
                     properties.FirstOrDefault(p => p.Name.Equals(item.Key, StringComparison.OrdinalIgnoreCase));
 
-                matchedProperty?.SetValue(config, item.Value, null);
+                if (matchedProperty == null) continue;
+
+                var propertyValue = GetPropertyValue(matchedProperty.PropertyType, item.Value);
+
+                matchedProperty?.SetValue(config, propertyValue, null);
             }
 
             return config;
@@ -158,6 +165,13 @@ namespace ExternalConfiguration
             return _useCache
                 ? ServiceSettingsCache.GetOrAdd(fullServiceName, settings)
                 : settings;
+        }
+
+        internal static object GetPropertyValue(Type type, string stringValue)
+        {
+            return type == typeof(string) 
+                ? stringValue 
+                : JSON.Deserialize(stringValue, type, new Options());
         }
 
         internal static string GetFullServiceName(string environment, string service, string hosting)

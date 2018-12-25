@@ -198,6 +198,56 @@ namespace ExternalConfiguration.Tests
         }
 
         [Fact]
+        public async Task GetServiceSettingsAsyncT_HandleDifficultCase()
+        {
+            StoreShouldReturn(new Dictionary<string, string>
+            {
+                { "Name", "custom" },
+                { "Threshold", "2018" },
+                { "DoubleValue", "42.56" },
+                {
+                    "EmailsArray",
+                    @"
+                    [
+                        {
+                            ""UserName"": ""aidmsu"",
+                            ""SmtpPort"": 42
+                        },
+                        {
+                            ""UserName"": ""aidmsu2"",
+                            ""SmtpPort"": 4242
+                        }
+                    ]"
+                },
+                {
+                    "Email",
+                    @" 
+                    {
+                        ""UserName"": ""aidmsu3"",
+                        ""SmtpPort"": 424242
+                    }" }
+            });
+
+            var provider = CreateProvider(_correctUrl, "token", "debug", false);
+
+            var config = await provider.GetServiceSettingsAsync<CustomConfig>("custom");
+
+            Assert.NotNull(config);
+            Assert.Equal("custom", config.Name);
+            Assert.Equal(2018, config.Threshold);
+            Assert.Equal(42.56, config.DoubleValue);
+            Assert.NotNull(config.EmailsArray);
+            Assert.Equal(2, config.EmailsArray.Length);
+            Assert.Equal("aidmsu", config.EmailsArray[0].UserName);
+            Assert.Equal(42, config.EmailsArray[0].SmtpPort);
+            Assert.Equal("aidmsu2", config.EmailsArray[1].UserName);
+            Assert.Equal(4242, config.EmailsArray[1].SmtpPort);
+            Assert.NotNull(config.Email);
+            Assert.Equal("aidmsu3", config.Email.UserName);
+            Assert.Equal(424242, config.Email.SmtpPort);
+        }
+
+        [Fact]
         public async Task GetServiceSettingsAsyncT_IsNotCaseSensitive()
         {
             StoreShouldReturn(new Dictionary<string, string>
@@ -233,6 +283,98 @@ namespace ExternalConfiguration.Tests
             Assert.Equal("secretSignature", config.ApiSignature);
         }
 
+        [Fact]
+        public void GetPropertyValue_ReturnCorrect_WhenTypeIsInt32()
+        {
+            var value = ExternalConfigurationProvider.GetPropertyValue(typeof(Int32), "42");
+
+            var intValue = Assert.IsType<Int32>(value);
+            Assert.Equal(42, intValue);
+        }
+
+        [Fact]
+        public void GetPropertyValue_ReturnCorrect_WhenTypeIsInt64()
+        {
+            var value = ExternalConfigurationProvider.GetPropertyValue(typeof(Int64), "42");
+
+            var longValue = Assert.IsType<Int64>(value);
+            Assert.Equal(42, longValue);
+        }
+
+        [Fact]
+        public void GetPropertyValue_ReturnCorrect_WhenTypeIsDouble()
+        {
+            var value = ExternalConfigurationProvider.GetPropertyValue(typeof(Double), "42.42");
+
+            var doubleValue = Assert.IsType<Double>(value);
+            Assert.Equal(42.42, doubleValue);
+        }
+
+        [Fact]
+        public void GetPropertyValue_ReturnCorrect_WhenTypeIsString()
+        {
+            var value = ExternalConfigurationProvider.GetPropertyValue(typeof(string), "custom value");
+
+            var stringValue = Assert.IsType<string>(value);
+            Assert.Equal("custom value", stringValue);
+        }
+
+        [Fact]
+        public void GetPropertyValue_ReturnCorrect_WhenTypeIsCustomClass()
+        {
+            var value = ExternalConfigurationProvider.GetPropertyValue(typeof(EmailSettings), @"
+{
+    ""UserName"": ""aidmsu"",
+    ""SmtpPort"": 25
+}");
+
+            var emailSettings = Assert.IsType<EmailSettings>(value);
+            Assert.Equal("aidmsu", emailSettings.UserName);
+            Assert.Equal(25, emailSettings.SmtpPort);
+        }
+
+        [Fact]
+        public void GetPropertyValue_ReturnCorrect_WhenTypeIsArray()
+        {
+            var value = ExternalConfigurationProvider.GetPropertyValue(typeof(EmailSettings[]), @"[
+{
+    ""UserName"": ""aidmsu"",
+    ""SmtpPort"": 25
+},
+{
+    ""UserName"": ""aidmsu2"",
+    ""SmtpPort"": 42
+}]");
+
+            var emailSettingsArray = Assert.IsType<EmailSettings[]>(value);
+            Assert.Equal(2, emailSettingsArray.Length);
+            Assert.Equal("aidmsu", emailSettingsArray[0].UserName);
+            Assert.Equal(25, emailSettingsArray[0].SmtpPort);
+            Assert.Equal("aidmsu2", emailSettingsArray[1].UserName);
+            Assert.Equal(42, emailSettingsArray[1].SmtpPort);
+        }
+
+        [Fact]
+        public void GetPropertyValue_ReturnCorrect_WhenTypeIsList()
+        {
+            var value = ExternalConfigurationProvider.GetPropertyValue(typeof(List<EmailSettings>), @"[
+{
+    ""UserName"": ""aidmsu"",
+    ""SmtpPort"": 25
+},
+{
+    ""UserName"": ""aidmsu2"",
+    ""SmtpPort"": 42
+}]");
+
+            var emailSettingsArray = Assert.IsType<List<EmailSettings>>(value);
+            Assert.Equal(2, emailSettingsArray.Count);
+            Assert.Equal("aidmsu", emailSettingsArray[0].UserName);
+            Assert.Equal(25, emailSettingsArray[0].SmtpPort);
+            Assert.Equal("aidmsu2", emailSettingsArray[1].UserName);
+            Assert.Equal(42, emailSettingsArray[1].SmtpPort);
+        }
+
         private void StoreShouldReturn(Dictionary<string, string> keyValues)
         {
             _mockStore.Setup(store => store.GetServiceConfigAsync(It.IsAny<string>(), It.IsAny<string>(),
@@ -262,5 +404,25 @@ namespace ExternalConfiguration.Tests
             public string apiKey { get; set; }
             public string ApiSignature { get; set; }
         }
+
+        private class EmailSettings
+        {
+            public string UserName { get; set; }
+            public int SmtpPort { get; set; }
+        }
+
+        private class CustomConfig
+        {
+            public string Name { get; set; }
+
+            public int Threshold { get; set; }
+
+            public double DoubleValue { get; set; }
+
+            public EmailSettings[] EmailsArray { get; set; }
+
+            public EmailSettings Email { get; set; }
+        }
+
     }
 }
